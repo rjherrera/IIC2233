@@ -11,9 +11,9 @@ Esto es importante porque muchas tareas de administración de los repositorios e
 
 Asegúrate de llenar lo siguiente:
 
-| Nº Alumno    | Nombre              | Email UC      |
-|:-------------|:--------------------|:--------------|
-| 123456789    | Nombre alumno       | correo@uc.cl  |
+| Nº Alumno    | Nombre              | Email UC        |
+|:-------------|:--------------------|:----------------|
+| 14632152     | Raimundo Herrera    | rjherrera@uc.cl |
 
 
 ## Sobre las entregas
