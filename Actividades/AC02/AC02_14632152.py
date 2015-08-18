@@ -22,7 +22,8 @@ class Audifono:
         self.intensidad_max = int_max
 
     def escuchar(self, cancion):
-        print('La canción %s esta siendo reproducida desde un audífono' % cancion.nombre)
+        print('La canción %s esta siendo reproducida desde un audífono' %
+              cancion.nombre)
 
 
 class Circumaural(Audifono):
@@ -57,6 +58,8 @@ class Inalambrico(Audifono):
         if self.conectado:
             print('La canción %s está siendo reproducida' % cancion.nombre,
                   'desde un audífono inalámbrico')
+        else:
+            print('No existe conexión, no se reproduce nada')
 
 
 class Bluetooth(Inalambrico):
@@ -69,12 +72,16 @@ class Bluetooth(Inalambrico):
         if self.conectado:
             print('La canción %s está siendo reproducida' % cancion.nombre,
                   'desde un audífono con Bluetooth')
+        else:
+            print('No existe conexión, no se reproduce nada')
 
 
 # reproductor = Reproductor(dist_audifono=90)
 
 if __name__ == '__main__':
     from random import randint, uniform
+
+    print('Executing from main\n')
 
     aud = Audifono(frec_min=randint(20, 100),
                    frec_max=randint(17000, 20000),
