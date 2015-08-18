@@ -80,6 +80,16 @@ if __name__ == '__main__':
                    frec_max=randint(17000, 20000),
                    impedancia=uniform(10, 80),
                    int_max=randint(20, 40))
+    crl = Circumaural(aislacion=uniform(0, 100),
+                      frec_min=randint(20, 100),
+                      frec_max=randint(17000, 20000),
+                      impedancia=uniform(10, 80),
+                      int_max=randint(20, 40))
+    inr = Intraaural(incomodidad=uniform(0, 100),
+                     frec_min=randint(20, 100),
+                     frec_max=randint(17000, 20000),
+                     impedancia=uniform(10, 80),
+                     int_max=randint(20, 40))
     inl = Inalambrico(rango=randint(10, 30),
                       frec_min=randint(20, 100),
                       frec_max=randint(17000, 20000),
@@ -95,6 +105,8 @@ if __name__ == '__main__':
     cancion = Cancion(nombre='Midnight - Coldplay')
 
     aud.escuchar(cancion)
+    crl.escuchar(cancion)
+    inr.escuchar(cancion)
     inl.conectar(dist_audifono=15)
     inl.escuchar(cancion)
     bth.conectar(dist_audifono=20)
