@@ -47,7 +47,7 @@ class Inalambrico(Audifono):
         self.conectado = False
 
     def conectar(self, dist_audifono):
-        if dist_audifono < self.rango:
+        if dist_audifono <= self.rango:
             self.conectado = True
             print('Conectado')
         else:
@@ -104,10 +104,15 @@ if __name__ == '__main__':
 
     cancion = Cancion(nombre='Midnight - Coldplay')
 
+    print('Estándar')
     aud.escuchar(cancion)
+    print('\nCircumaural')
     crl.escuchar(cancion)
+    print('\nIntraaural')
     inr.escuchar(cancion)
+    print('\nInalámbrico')
     inl.conectar(dist_audifono=15)
     inl.escuchar(cancion)
+    print('\nBluetooth:')
     bth.conectar(dist_audifono=20)
     bth.escuchar(cancion)
