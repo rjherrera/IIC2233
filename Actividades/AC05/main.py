@@ -124,9 +124,9 @@ class Repository:
         for i in self.branches:
             temp = i.last_commit
             while temp:
-                temp = temp.commit_anterior
                 if temp.id == commit_id:
                     pass
+                temp = temp.commit_anterior
         #############
         # COMPLETAR:
         # Buscar el commit con cierta id y retornar el estado del repositorio
