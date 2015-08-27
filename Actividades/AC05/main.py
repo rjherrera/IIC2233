@@ -5,36 +5,85 @@
 
 class Commit:
 
+    id_actual = 0
+
     def __init__(self, message, changes):
+        Commit.id_actual += 1
+        self.id = Commit.id_actual
+        self.message = message
+        self.changes = changes
+        self.commit_anterior = None
+        self.commit_siguiente = None
         #############
         # COMPLETAR:
         # 'changes' es una lista de tuplas.
         # Puedes modificar esta clase a gusto tuyo.
         #############
-        pass
 
 
 class Branch:
 
-    #############
-    # COMPLETAR:
-    # Crear __init__ con lo que consideres necesario
-    #############
+    id_actual = 0
+
+    def __init__(self, nombre, last_commit=None):
+        Branch.id_actual += 1
+        self.id = Branch.id_actual
+        self.nombre = nombre
+        self.last_commit = last_commit
 
     def new_commit(self, commit):
-        #############
-        # COMPLETAR:
-        # Agregar un nuevo commit del tipo Commit a esta branch.
-        # Este commit define el estado final temporalmente.
-        #############
-        pass
+        commit.commit_anterior = self.last_commit
+        if self.last_commit is not None:
+            self.last_commit.commit_siguiente = commit
+        self.last_commit = commit
 
     def pull(self):
         files = []
+        temp = self.last_commit
+        first = None
+        while temp:
+            ant = temp
+            temp = temp.commit_anterior
+            if temp is None:
+                first = ant
+        while first:
+            for i, j in first.changes:
+                files.append((i, j))
+            first = first.commit_siguiente
+        for action, f in files:
+            if action == 'DELETE':
+                indice = files.index((action, f))
+                for i in files[:indice]:
+                    if i[1] == f:
+                        files.pop(files.index(i))
+                        files.pop(files.index((action, f)))
+        files = [i[1] for i in files]
         #############
         # COMPLETAR:
         # Retornar el estado final de esta branch (una lista de archivos).
         #############
+        return files
+
+    def get_final_state(self):
+        files = []
+        temp = self.last_commit
+        first = None
+        while temp:
+            ant = temp
+            temp = temp.commit_anterior
+            if temp is None:
+                first = ant
+        while first:
+            for i, j in first.changes:
+                files.append((i, j))
+            first = first.commit_siguiente
+        for action, f in files:
+            if action == 'DELETE':
+                indice = files.index((action, f))
+                for i in files[:indice]:
+                    if i[1] == f:
+                        files.pop(files.index(i))
+                        files.pop(files.index((action, f)))
         return files
 
 
@@ -42,6 +91,11 @@ class Repository:
 
     def __init__(self, name):
         self.name = name
+        b = Branch('master')
+        c = Commit(message='commit inicial', changes=[('CREATE', '.jit')])
+        b.new_commit(c)
+        self.first_branch = b
+        self.branches = [b]
         #############
         # COMPLETAR:
         # Crear branch 'master'.
@@ -53,17 +107,26 @@ class Repository:
         # COMPLETAR:
         # Crear branch a partir del último estado de la 'from_branch_name'.
         #############
-        pass
+        b = Branch(new_branch_name)
+        b_from = self.branch(from_branch_name)
+        c = Commit(message=new_branch_name + ' initial',
+                   changes=b_from.get_final_state())
+        self.branches.append(b)
+        return b
 
     def branch(self, branch_name):
-        #############
-        # COMPLETAR:
-        # Retornar la branch con el nombre 'branch_name'.
-        #############
-        return None
+        for i in self.branches:
+            if i.nombre == branch_name:
+                return i
 
     def checkout(self, commit_id):
         files = []
+        for i in self.branches:
+            temp = i.last_commit
+            while temp:
+                temp = temp.commit_anterior
+                if temp.id == commit_id:
+                    pass
         #############
         # COMPLETAR:
         # Buscar el commit con cierta id y retornar el estado del repositorio
@@ -72,6 +135,18 @@ class Repository:
         return files
 
 
+
+b = Branch('Mi rama')
+c = Commit(message="Borrar datos viejos y nuevas instrucciones",
+           changes=[("CREATE", "data.txt"), ("CREATE", "README.md")])
+b.new_commit(c)
+c = Commit(message="Borrar datos viejos y nuevas instrucciones",
+           changes=[("DELETE", "data.txt")])
+b.new_commit(c)
+c = Commit(message="Borrar datos viejos y nuevas instrucciones",
+           changes=[("CREATE", "data.txt"), ("CREATE", "asasREADME.md")])
+b.new_commit(c)
+print(b.pull())
 if __name__ == '__main__':
     # Ejemplo de uso
     # Puedes modificarlo para probar esto pero al momento de la corrección
