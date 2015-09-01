@@ -64,9 +64,11 @@ if __name__ == '__main__':
     cont_rojo = 0
     cont_verde = 0
     gen = paciente()
+    p = next(gen)
     while cont_amar < 10 or cont_azul < 10 or cont_nara \
             < 10 or cont_rojo < 10 or cont_verde < 10:
         p = next(gen)
+        print('Líneas leidas = %d' % (p.id + 1))
         if p.color == 'amarillo' and p.ano_inicio == '2013' and cont_amar < 10:
             reporte.pacientes.append(p)
             cont_amar += 1
@@ -82,4 +84,4 @@ if __name__ == '__main__':
         if p.color == 'verde' and p.ano_inicio == '2013' and cont_verde < 10:
             reporte.pacientes.append(p)
             cont_verde += 1
-    print(reporte.pacientes_por_color('amarillo'))
+    # print(reporte.pacientes_por_color('amarillo'))
