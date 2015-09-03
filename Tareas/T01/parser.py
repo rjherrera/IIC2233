@@ -58,6 +58,7 @@ def get_list_attr(js_string, key):
 # "equiv": "(FIS1533 o FIZ021) y MAT1203"
 def get_logical_attr(js_string, key):
     key, string = get_string_attr(js_string, key)
+    string = string.replace('(c)', '[c]').replace(' ', '')
     return key, string
 
 
@@ -67,6 +68,10 @@ def process_hora(string):
     dias = dias.split('-')
     horas = horas.split(',')
     return [(i, j) for i in dias for j in horas]
+
+
+def process_req(string):
+    return string if string != 'Notiene' else ''
 
 
 class Reader:
@@ -145,7 +150,7 @@ if __name__ == '__main__':
     tests.dictionaries
     req = RequirementsReader('requisitos.txt')
     req.dictionaries
-    print(courses.dictionaries[1])
+    print(req.dictionaries[1])
     # print(sl)
 
     # print(get_numeric_attr(sl[0], 'ofr'))

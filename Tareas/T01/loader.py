@@ -2,11 +2,23 @@
 import parser
 from cursos import Modulo, Horario, Curso
 from usuarios import Alumno, Profesor
+from evaluaciones import Evaluacion
 
 
-## CURSOS
+# REQUISITOS
+requirements = parser.RequirementsReader('requisitos.txt')
+requisitos = {}
+
+for requirement in requirements.dictionaries:
+    # eqs = requirement['equiv'][1:-1] # por situación asumida en desuso
+    # equivs = eqs.split('o') if requirement['equiv'] != 'Notiene' else []
+    prerreq = parser.process_req(requirement['prerreq'])
+    # requisitos[requirement['sigla']] = (equivs, prerreq)
+    requisitos[requirement['sigla']] = prerreq
+
+# CURSOS
 courses = parser.CourseReader('cursos.txt')
-cursos = []
+cursos = {}
 
 for course in courses.dictionaries:
     horarios = []
@@ -43,20 +55,26 @@ for course in courses.dictionaries:
               creditos=course['cred'],
               capacidad=course['ofr'],
               horarios=horarios)
-    cursos.append(c)
-print(len(cursos))
-## CURSOS
+    if c.sigla in requisitos:
+        c.requisitos = requisitos[c.sigla]
+    cursos[course['sigla'] + str(course['sec'])] = c
+# CURSOS
 
 
-## USUARIOS
-## REVISAR TEMA NOMBRE / APELLIDO
+# USUARIOS
+# REVISAR TEMA NOMBRE / APELLIDO
 users = parser.PeopleReader('personas.txt')
-usuarios = []
+usuarios = {}
 
 for user in users.dictionaries:
     if user['alumno']:
+        aprobados = user['ramos_pre']
+        n = 0
+        if user['usuario'] == 'msmith2':
+            # lag
+            pass
         u = Alumno(idolos=user['idolos'],
-                   aprobados=user['ramos_pre'],
+                   aprobados=aprobados,
                    nombre_completo=user['nombre'],
                    usuario=user['usuario'],
                    contrasena=user['clave'])
@@ -64,13 +82,30 @@ for user in users.dictionaries:
         u = Profesor(nombre_completo=user['nombre'],
                      usuario=user['usuario'],
                      contrasena=user['clave'])
-    usuarios.append(u)
-print(len(usuarios))
-## REVISAR TEMA NOMBRE / APELLIDO
-## USUARIOS
+    usuarios[u.usuario] = u
+# REVISAR TEMA NOMBRE / APELLIDO
+# USUARIOS
 
-## EVALUACIONES
+# EVALUACIONES
+tests = parser.TestsReader('evaluaciones.txt')
+evaluaciones = []
+for test in tests.dictionaries:
+    sigla = test['sigla']
+    e = Evaluacion(sigla=sigla,
+                   tipo=test['tipo'],
+                   seccion=test['sec'],
+                   fecha=test['fecha'])
+    evaluaciones.append(e)
+# ASIGNAR EVALUACIONES
+for prueba in evaluaciones:
+    if (prueba.sigla + str(prueba.seccion)) in cursos:
+        cursos[prueba.sigla + str(prueba.seccion)].agregar_prueba(prueba)
+# EVALUACIONES
 
-
-
-## EVALUACIONES
+if __name__ == '__main__':
+    print(len(requisitos))
+    print(len(cursos))
+    print(len(usuarios))
+    print(len(evaluaciones))
+    print(usuarios['msmith2'].cursos_aprobados)
+    print(cursos['MAT16403'].requisitos)

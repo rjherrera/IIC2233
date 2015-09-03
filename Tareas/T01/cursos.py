@@ -22,11 +22,18 @@ class Curso:
         self.horarios = horarios
         self.alumnos = []
         self.evaluaciones = []
-        self.requisitos = []
+        self.requisitos = ''
 
     @property
     def disponibles(self):
         return self.capacidad - self.ocupados
+
+    def agregar_prueba(self, evaluacion):
+        self.evaluaciones.append(evaluacion)
+        return True
+
+    def es_tomable(self):
+        return self.disponibles > 0
 
     def __str__(self):
         return '%s-%d @ %r' % (self.sigla, self.seccion, self.horarios)
