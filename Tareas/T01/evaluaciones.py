@@ -21,7 +21,6 @@ class Evaluacion:
         return 'Evaluacion(%s-%s - %s)' % (self.tipo, self.sigla, self.fecha)
 
 if __name__ == '__main__':
-    pass
     e1 = Evaluacion('IIC1103', 'I1', 3, '1-09')
     e2 = Evaluacion('', '', '', '1-09')
     e3 = Evaluacion('', '', '', '2-09')

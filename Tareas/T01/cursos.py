@@ -18,11 +18,14 @@ class Curso:
         self.campus = campus
         self.creditos = creditos
         self.capacidad = capacidad
-        self.ocupados = 0
         self.horarios = horarios
         self.alumnos = []
         self.evaluaciones = []
         self.requisitos = ''
+
+    @property
+    def ocupados(self):
+        return len(self.alumnos)
 
     @property
     def disponibles(self):
@@ -35,6 +38,15 @@ class Curso:
     def es_tomable(self):
         return self.disponibles > 0
 
+    def agregar_alumno(self, alumno):
+        self.alumnos.append(alumno)
+
+    def remover_alumno(self, alumno):
+        self.alumnos.remove(alumno)
+
+    def __eq__(self, curso):
+        return self.NRC == curso.NRC
+
     def __str__(self):
         return '%s-%d @ %r' % (self.sigla, self.seccion, self.horarios)
 
@@ -44,7 +56,7 @@ class Curso:
 
 class Horario:
 
-    tipo_abrev = [('Cátedra', '(CAT)'), ('Ayudantía', '(AYUD)'),
+    tipo_abrev = [('Cátedra', '(CAT)'), ('Ayudantía', '(AYD)'),
                   ('Laboratorio', '(LAB)')]
 
     def __init__(self, tipo, sala, modulos=[]):
@@ -72,6 +84,10 @@ class Horario:
             return '%s:' % initial.dia + string + self.abreviacion
         return ';'.join([str(i) for i in self.modulos]) + self.abreviacion
 
+    def str_b(self, curso):
+        string = '%s-%d %s' % (curso.sigla, curso.seccion, self.abreviacion)
+        return string if len(string) != 14 else string + ' '
+
     def __repr__(self):
         string = str(self)[:str(self).find('(')]
         return 'Horario(%s)' % string
@@ -93,6 +109,12 @@ class Modulo:
 
     def __repr__(self):
         return 'Modulo(%s)' % (self)
+
+    def __hash__(self):
+        return hash(self.dia + str(self.modulo))
+
+    def __eq__(self, modulo):
+        return self.dia + str(self.modulo) == modulo.dia + str(modulo.modulo)
 
 
 if __name__ == '__main__':
@@ -119,7 +141,7 @@ if __name__ == '__main__':
         if course['hora_ayud'] and course['sala_ayud']:
             modulos = lector.process_hora(course['hora_ayud'])
             modulos = [Modulo(i, int(j)) for i, j in modulos]
-            h_ayud = Horario(tipo='Cátedra',
+            h_ayud = Horario(tipo='Ayudantía',
                              sala=course['sala_ayud'],
                              modulos=modulos)
             horarios.append(h_ayud)

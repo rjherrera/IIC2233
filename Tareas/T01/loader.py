@@ -3,9 +3,11 @@ import parser
 from cursos import Modulo, Horario, Curso
 from usuarios import Alumno, Profesor
 from evaluaciones import Evaluacion
+from bacanosidad import bacanosidad_grupo
 
 
 # REQUISITOS
+# print('Creando requisitos...')
 requirements = parser.RequirementsReader('requisitos.txt')
 requisitos = {}
 
@@ -15,8 +17,11 @@ for requirement in requirements.dictionaries:
     prerreq = parser.process_req(requirement['prerreq'])
     # requisitos[requirement['sigla']] = (equivs, prerreq)
     requisitos[requirement['sigla']] = prerreq
-
+# print('Requisitos creados.')
+# REQUISITOS
+# print()
 # CURSOS
+# print('Creando cursos...')
 courses = parser.CourseReader('cursos.txt')
 cursos = {}
 
@@ -39,7 +44,7 @@ for course in courses.dictionaries:
     if course['hora_ayud'] and course['sala_ayud']:
         modulos = parser.process_hora(course['hora_ayud'])
         modulos = [Modulo(i, int(j)) for i, j in modulos]
-        h_ayud = Horario(tipo='Cátedra',
+        h_ayud = Horario(tipo='Ayudantía',
                          sala=course['sala_ayud'],
                          modulos=modulos)
         horarios.append(h_ayud)
@@ -58,21 +63,17 @@ for course in courses.dictionaries:
     if c.sigla in requisitos:
         c.requisitos = requisitos[c.sigla]
     cursos[course['sigla'] + str(course['sec'])] = c
+# print('Cursos creados.')
 # CURSOS
-
-
+# print()
 # USUARIOS
-# REVISAR TEMA NOMBRE / APELLIDO
+# print('Creando usuarios...')
 users = parser.PeopleReader('personas.txt')
 usuarios = {}
 
 for user in users.dictionaries:
     if user['alumno']:
-        aprobados = user['ramos_pre']
-        n = 0
-        if user['usuario'] == 'msmith2':
-            # lag
-            pass
+        aprobados = user['ramos_pre'] + ['']
         u = Alumno(idolos=user['idolos'],
                    aprobados=aprobados,
                    nombre_completo=user['nombre'],
@@ -83,10 +84,11 @@ for user in users.dictionaries:
                      usuario=user['usuario'],
                      contrasena=user['clave'])
     usuarios[u.usuario] = u
-# REVISAR TEMA NOMBRE / APELLIDO
+# print('Usuarios creados.')
 # USUARIOS
-
+# print()
 # EVALUACIONES
+# print('Asignando evaluaciones a los cursos...')
 tests = parser.TestsReader('evaluaciones.txt')
 evaluaciones = []
 for test in tests.dictionaries:
@@ -100,12 +102,26 @@ for test in tests.dictionaries:
 for prueba in evaluaciones:
     if (prueba.sigla + str(prueba.seccion)) in cursos:
         cursos[prueba.sigla + str(prueba.seccion)].agregar_prueba(prueba)
+# print('Evaluaciones asignadas.')
 # EVALUACIONES
+# print()
+# BACANOSIDAD
+# print('Asignando usuarios a sus grupos...')
+for user, b_relativa, grupo in bacanosidad_grupo:
+    for usuario in usuarios.values():
+        if usuario.nombre_completo == user:
+            usuario.bacanosidad_relativa = b_relativa
+            usuario.horario_inscripcion = grupo
+# print('Usuarios asignados.')
+# BACANOSIDAD
+
 
 if __name__ == '__main__':
+    print()
     print(len(requisitos))
     print(len(cursos))
     print(len(usuarios))
     print(len(evaluaciones))
-    print(usuarios['msmith2'].cursos_aprobados)
-    print(cursos['MAT16403'].requisitos)
+    print(usuarios['msmith2'].ingresar('Z9GksEBxs'))
+    # print(usuarios['msmith2'].cursos_aprobados)
+    # print(cursos['MAT16403'].requisitos)
