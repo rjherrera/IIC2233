@@ -2,6 +2,10 @@
 import parser as lector
 
 
+TIPO_ABREV = [('Cátedra', '(CAT)'), ('Ayudantía', '(AYD)'),
+              ('Laboratorio', '(LAB)')]
+
+
 class Curso:
 
     def __init__(self, nombre, sigla, NRC, campus, profesor,
@@ -56,14 +60,11 @@ class Curso:
 
 class Horario:
 
-    tipo_abrev = [('Cátedra', '(CAT)'), ('Ayudantía', '(AYD)'),
-                  ('Laboratorio', '(LAB)')]
-
     def __init__(self, tipo, sala, modulos=[]):
         self.modulos = modulos
         self.tipo = tipo
         self.sala = sala
-        abrev = [j for i, j in self.__class__.tipo_abrev if i == tipo]
+        abrev = [j for i, j in TIPO_ABREV if i == tipo]
         self.abreviacion = abrev[0] if len(abrev) != 0 else ''
 
     def __str__(self):

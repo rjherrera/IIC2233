@@ -26,8 +26,19 @@ def es_alumno(usuario):
 
 def bacanosidad(usuarios):
     lista = [i for i in usuarios.values() if es_alumno(i)]
+    lista = sorted(lista, key=lambda x: x.nombre_completo)
     m = np.zeros((len(lista), len(lista)))
-    return None
+    for i in range(len(lista)):
+        for j in range(len(lista)):
+            if lista[j].nombre_completo in lista[i].idolos:
+                m[i][j] = 1 / len(lista[i].idolos)
+    l = [i.nombre_completo for i in lista]
+    for i in range(20):
+        m = m ** 2  # multiplico hasta que converja
+    mx = np.amax(m[0]) if np.amax(m[0]) != 0 else 1
+    mx = m[0] / mx
+    lista = [[i[0], i[1]] for i in zip(l, list(mx))]
+    return list(lista)
 
 
 def groups(lista, n):

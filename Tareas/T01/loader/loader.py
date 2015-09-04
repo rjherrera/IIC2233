@@ -114,7 +114,11 @@ if os.path.exists(ruta):
         l = [[j, float(k)] for j, k in [i.split('\t') for i in l]]
 else:
     print('No existe %s, por lo que se está generando la bacanosidad.' % ruta)
-    pass
+    l = bacanosidad(usuarios)
+    with open(ruta, 'w') as f:
+        for i in l:
+            f.write(i[0] + '\t\t\t' + str(i[1]) + '\n')
+    print('Bacanosidad exportada a %s.' % ruta)
 bacanosidad_grupo = obtener_grupos(l)
 
 for user, b_relativa, grupo in bacanosidad_grupo:
@@ -125,7 +129,6 @@ for user, b_relativa, grupo in bacanosidad_grupo:
 # print('Usuarios asignados.')
 # BACANOSIDAD
 print('Toma de ramos cargada.')
-# print(bacanosidad(usuarios))
 
 if __name__ == '__main__':
     print()

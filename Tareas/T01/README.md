@@ -7,6 +7,8 @@ Los sistemas de toma de ramos en esta tarea se ejecutan desde [main.py](main.py)
 
 Cuando uno ingresa al sistema, éste identifica si se trata de un profesor o un alumno, en caso de ser profesor, como únicas opciones permite dar y quitar permisos. En cambio, si se ingresa como alumno, nos pregunta sobre el el tiempo del día (al ejecutar el programa se entiende mejor), para decidir si ir a Pacmático o Bummer.
 
+La interfaz se ejecuta por medio de menus separados, que son instancias de clases.
+
 ### Bummer
 
 Dentro de Bummer, se permite tomar ramos, botarlos y generar horarios o calendarios. Cuando se decide ingresar o a tomar o a botar ramos, el sistema pregunta por una hora, la cual, de ser correspondiente al horario de inscripcion del alumno se guarda temporalmente por 3 minutos, para salir y entrar sin problemas durante ese lapso, hasta que vuelve a pedirla en caso de querer volver a entrar a la toma de ramos.
