@@ -53,6 +53,16 @@ class Alumno(Usuario):
         return self._cursos_aprobados + correq
 
     @property
+    def creditos_aprobados(self):
+        return len(self._cursos_aprobados) * 10
+
+    @property
+    def puntos_pacmatico(self):
+        b_relativa = self.bacanosidad_relativa
+        creds = self.creditos_aprobados
+        return (1 + b_relativa / 4 + creds / 4000) * 800
+
+    @property
     def creditos(self):
         return sum(i.creditos for i in self.cursos_por_tomar)
 
@@ -93,20 +103,20 @@ class Alumno(Usuario):
 
     def tope_campus(self, curso):
         campuses = [i.campus for i in self.cursos_por_tomar]
-        if set(campuses) == set([curso.campus]):  # si es el mismo campus
-            return False
+        if set(campuses) == set([curso.campus]) or not set(campuses):
+            return False  # corte rapido (no hay nada o es el mismo campus)
         mis_modulos = []
         for i in self.cursos_por_tomar:
             for horario in i.horarios:
                 if horario.tipo != 'Ayudantía':
-                    mis_modulos.append((curso, horario.modulos))
+                    mis_modulos.append((i, horario.modulos))
         cur_mods = [i.modulos for i in curso.horarios if i.tipo != 'Ayudantía']
         cur_mods = [j for i in cur_mods for j in i]
         for i, j in mis_modulos:
             if i.campus != curso.campus:
                 for k in j:
                     for l in cur_mods:
-                        if abs(k.modulo - l.modulo) == 1:
+                        if k.dia == l.dia and abs(k.modulo - l.modulo) == 1:
                             return True
         return False
 
@@ -130,14 +140,14 @@ class Alumno(Usuario):
         if not curso.aprobacion:
             if (pasa_requisito(self.cursos_aprobados, curso.requisitos)
                     or curso in self.permisos):
-                self.agregar_curso(curso)
-                print('Curso inscrito.')
-                return True
+                if self.agregar_curso(curso):
+                    print('Curso inscrito.')
+                    return True
+                print('No hay cupos disponibles.')
             print('No cumples con los requisitos.')
         else:
             if curso in self.permisos:
-                if curso.es_tomable():
-                    self.agregar_curso(curso)
+                if self.agregar_curso(curso):
                     print('Curso inscrito.')
                     return True
                 print('No hay cupos disponibles.')
@@ -160,9 +170,12 @@ class Alumno(Usuario):
         return False
 
     def agregar_curso(self, curso):
-        self.cursos_por_tomar.append(curso)
-        self.cursos_aprobados.append(curso.sigla + '[c]')
-        curso.agregar_alumno(self)
+        if curso.es_tomable():
+            self.cursos_por_tomar.append(curso)
+            self.cursos_aprobados.append(curso.sigla + '[c]')
+            curso.agregar_alumno(self)
+            return True
+        return False
 
     def __repr__(self):
         return 'Alumno(%s, %s)' % (self.nombre_completo, self.usuario)
@@ -191,14 +204,18 @@ class Profesor(Usuario):
             alumno.permisos.append(curso)
             self.permisos_dados.append((alumno, curso))
             return True
+        print('No puede dar permisos de cursos que no dicta.')
         return False
 
     def quitar_permiso(self, alumno, curso):
         if (alumno, curso) in self.permisos_dados or self.dicta_curso(curso):
             if curso in alumno.permisos:
                 alumno.permisos.remove(curso)
+            else:
+                print('El alumno no tenía este permiso.')
             if curso in alumno.cursos_por_tomar:
                 alumno.cursos_por_tomar.remove(curso)
+                print('Se ha retirado el curso tomado por el alumno.')
             if (alumno, curso) in self.permisos_dados:
                 self.permisos_dados.remove((alumno, curso))
             return True

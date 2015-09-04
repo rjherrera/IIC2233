@@ -20,6 +20,9 @@ class Evaluacion:
     def __repr__(self):
         return 'Evaluacion(%s-%s - %s)' % (self.tipo, self.sigla, self.fecha)
 
+    def __str__(self):
+        return '%s: %s' % (self.tipo, self.fecha)
+
 if __name__ == '__main__':
     e1 = Evaluacion('IIC1103', 'I1', 3, '1-09')
     e2 = Evaluacion('', '', '', '1-09')
