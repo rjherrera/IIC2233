@@ -1,14 +1,14 @@
 # coding=utf-8
-import parser
-from cursos import Modulo, Horario, Curso
+from loader import parser
+from cursos import Modulo, Horario, Curso, Evaluacion
 from usuarios import Alumno, Profesor
-from evaluaciones import Evaluacion
-from bacanosidad import bacanosidad_grupo
+from loader.bacanosidad import obtener_grupos, bacanosidad
+import os.path
 
-
+print('Cargando toma de ramos...')
 # REQUISITOS
 # print('Creando requisitos...')
-requirements = parser.RequirementsReader('requisitos.txt')
+requirements = parser.RequirementsReader('files/requisitos.txt')
 requisitos = {}
 
 for requirement in requirements.dictionaries:
@@ -22,7 +22,7 @@ for requirement in requirements.dictionaries:
 # print()
 # CURSOS
 # print('Creando cursos...')
-courses = parser.CourseReader('cursos.txt')
+courses = parser.CourseReader('files/cursos.txt')
 cursos = {}
 
 for course in courses.dictionaries:
@@ -68,7 +68,7 @@ for course in courses.dictionaries:
 # print()
 # USUARIOS
 # print('Creando usuarios...')
-users = parser.PeopleReader('personas.txt')
+users = parser.PeopleReader('files/personas.txt')
 usuarios = {}
 
 for user in users.dictionaries:
@@ -89,7 +89,7 @@ for user in users.dictionaries:
 # print()
 # EVALUACIONES
 # print('Asignando evaluaciones a los cursos...')
-tests = parser.TestsReader('evaluaciones.txt')
+tests = parser.TestsReader('files/evaluaciones.txt')
 evaluaciones = []
 for test in tests.dictionaries:
     sigla = test['sigla']
@@ -107,6 +107,16 @@ for prueba in evaluaciones:
 # print()
 # BACANOSIDAD
 # print('Asignando usuarios a sus grupos...')
+ruta = 'files/bacanosidad.txt'
+if os.path.exists(ruta):
+    with open(ruta, 'r') as f:
+        l = [i.strip().strip('\n').replace('\t', '', 2) for i in f.readlines()]
+        l = [[j, float(k)] for j, k in [i.split('\t') for i in l]]
+else:
+    print('No existe %s, por lo que se está generando la bacanosidad.' % ruta)
+    pass
+bacanosidad_grupo = obtener_grupos(l)
+
 for user, b_relativa, grupo in bacanosidad_grupo:
     for usuario in usuarios.values():
         if usuario.nombre_completo == user:
@@ -114,7 +124,8 @@ for user, b_relativa, grupo in bacanosidad_grupo:
             usuario.horario_inscripcion = grupo
 # print('Usuarios asignados.')
 # BACANOSIDAD
-
+print('Toma de ramos cargada.')
+# print(bacanosidad(usuarios))
 
 if __name__ == '__main__':
     print()

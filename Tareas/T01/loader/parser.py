@@ -142,13 +142,13 @@ class RequirementsReader(Reader):
 
 
 if __name__ == '__main__':
-    people = PeopleReader('personas.txt')
+    people = PeopleReader('files/personas.txt')
     people.dictionaries
-    courses = CourseReader('cursos.txt')
+    courses = CourseReader('files/cursos.txt')
     courses.dictionaries
-    tests = TestsReader('evaluaciones.txt')
+    tests = TestsReader('files/evaluaciones.txt')
     tests.dictionaries
-    req = RequirementsReader('requisitos.txt')
+    req = RequirementsReader('files/requisitos.txt')
     req.dictionaries
     print(req.dictionaries[1])
     # print(sl)

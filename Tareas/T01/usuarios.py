@@ -2,6 +2,11 @@
 from requisitos import cumple as pasa_requisito
 from datetime import datetime
 
+HORARIOS = [('8:30', '10:30'), ('9:30', '11:30'), ('10:30', '12:30'),
+            ('11:30', '13:30'), ('12:30', '14:30'), ('13:30', '15:30'),
+            ('14:30', '16:30'), ('15:30', '17:30'), ('16:30', '18:30'),
+            ('17:30', '19:30')]
+
 
 class Usuario:
 
@@ -16,15 +21,11 @@ class Usuario:
 
 class Alumno(Usuario):
 
-    horarios = [('8:30', '10:30'), ('9:30', '11:30'), ('10:30', '12:30'),
-                ('11:30', '13:30'), ('12:30', '14:30'), ('13:30', '15:30'),
-                ('14:30', '16:30'), ('15:30', '17:30'), ('16:30', '18:30'),
-                ('17:30', '19:30')]
-
     def __init__(self, idolos, aprobados, **kwargs):
         super().__init__(**kwargs)
         self._horario_inscripcion = []
         self.bacanosidad_relativa = 0
+        self.bacanosidad_puntos = 0
         self._grupo = 0
         self._cursos_aprobados = aprobados
         self.idolos = idolos
@@ -41,7 +42,7 @@ class Alumno(Usuario):
 
     @horario_inscripcion.setter
     def horario_inscripcion(self, grupo):
-        hora_inicio, hora_termino = Alumno.horarios[grupo - 1]
+        hora_inicio, hora_termino = HORARIOS[grupo - 1]
         inicio = datetime.strptime(hora_inicio, '%H:%M').time()
         termino = datetime.strptime(hora_termino, '%H:%M').time()
         self._horario_inscripcion = [inicio, termino]
