@@ -22,7 +22,7 @@ def cambiar_nodo(self, nodo):
 class MetaRobot(type):
 
     def __new__(meta, nombre, base_clases, diccionario):
-        diccionario['creador'] = 'Rodolfo'
+        diccionario['creador'] = 'rjherrera'
         diccionario['ip_inicio'] = '190.102.62.283'
         diccionario['check_creator'] = check_creator
         diccionario['cortar_conexion'] = cortar_conexion
