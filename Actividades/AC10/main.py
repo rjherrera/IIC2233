@@ -1,9 +1,3 @@
-def __init__(self, *args, **kwargs):
-    for i, j in zip(self.attributes, args):  # asumo que lo da en orden
-        self.__dict__[i] = j
-    del self.__class__.attributes
-
-
 def __setattr__(obj, attributes, value):
     raise AttributeError('can\'t set attribute')
 
@@ -11,6 +5,11 @@ def __setattr__(obj, attributes, value):
 class RestrictedAccess(type):
 
     def __new__(cls, nombre, base_clases, diccionario):
+        attributes = diccionario.pop('attributes')
+
+        def __init__(self, *args, **kwargs):
+            for i, j in zip(attributes, args):  # asumo que lo da en orden
+                self.__dict__[i] = j
         diccionario['__init__'] = __init__
         diccionario['__setattr__'] = __setattr__
         return super().__new__(cls, nombre, base_clases, diccionario)
