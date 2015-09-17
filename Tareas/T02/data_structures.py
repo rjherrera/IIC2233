@@ -13,6 +13,7 @@ class List:
     def __init__(self, *args):
         self.ultimo = None
         self.primero = None
+        self.len = 0
         for i in args:
             self.append(i)
 
@@ -23,6 +24,13 @@ class List:
         else:
             self.ultimo.siguiente = Elemento(valor)
             self.ultimo = self.ultimo.siguiente
+        self.len += 1
+
+    def popleft(self):
+        elemento = self.primero
+        self.primero = elemento.siguiente
+        self.len -= 1
+        return elemento.valor
 
     # def pop(self, index=-1):
     #     length = len(self)
@@ -37,7 +45,7 @@ class List:
     #     return bool(filter(lambda x: x == element, self))
 
     def __len__(self):
-        return sum(1 for i in self)
+        return self.len
 
     def __getitem__(self, index):
         if isinstance(index, slice):
@@ -73,10 +81,15 @@ if __name__ == '__main__':
     lista = List(0, 1, 2, 3, 4, 5, 6, 7)
     print(4 in lista)
     print(lista)
-    print(lista[0])
-    print(len(lista))
+    lista.append('AAA')
+    print(lista)
+    lista.popleft()
+    print(lista)
+    print(lista[5])
+    print('len(%r)' % lista, len(lista))
     print(lista[:])
     print(lista[1:3])
+    print(lista[-1], 'a')
     # print(lista[1:5:1])
     # print(list(lista)[1:5:1])
     # print(len(Lista()))
