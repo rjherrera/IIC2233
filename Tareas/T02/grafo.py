@@ -1,6 +1,5 @@
 # coding=utf-8
-from data_structures2 import Arbol, pseudo_hash
-from data_structures import List
+from data_structures import *
 import sistema as st
 from sys import stdout
 from random import choice
@@ -87,10 +86,10 @@ class Grafo:
         id del puerto actual como el mayor y cambiandolo cada vez que se
         encuentre uno mayor, de modo de recorrerlos todos. Después se itera
         un numero indeterminado de veces sobre la red para obtener todas las
-        conexiones. Se detiene una vez que 4 grupos seguidos de 100000
-        iteraciones tengan el mismo numero de conexiones encontradas. En ambos
-        casos (puertos y conexiones) se guardan ids en un arbol binario y
-        objetos en otro arbol o lista, para hacer la comprobación de
+        conexiones. Se detiene una vez que, tras 4 grupos seguidos de 200000
+        iteraciones, no haya cambiado el numero de conexiones encontradas. En
+        ambos casos (puertos y conexiones) se guardan ids en un arbol binario
+        y objetos en otro arbol o lista, para hacer la comprobación de
         "objeto in contenedor" de forma óptima.
         :return: None
         '''
@@ -163,6 +162,7 @@ class Grafo:
         de 2 destinos, se opta por asignar como alternantes a aquellas que
         presenten 2 destinos y como aleatorias a las que presenten más.
         iteraciones ~= n_conexiones * promedio_destinos_por_puerto
+        :return: None
         '''
         for i in self.conexiones:
             for j in i.origen.conexiones:
@@ -230,6 +230,10 @@ class Grafo:
         return dobles
 
     def rutas_triangulares(self):
+        '''
+        Obtiene las rutas triangulares, descartando repetidas e ilogicas.
+        :return: List con Lists puertos que se conectan triangularmente
+        '''
         triangulos = List()
         for nodo in self.puertos:
             puerto = nodo.valor
@@ -265,6 +269,10 @@ class Grafo:
         return triangulos
 
     def rutas_cuadradas(self):
+        '''
+        Obtiene las rutas cuadradas, descartando repetidas e ilogicas.
+        :return: List con Lists puertos que se conectan cuadradamente
+        '''
         cuadrados = List()
         for nodo in self.puertos:
             puerto = nodo.valor
@@ -317,10 +325,10 @@ class Grafo:
 
     def rutas_cortas(self, cantidad):
         '''
-        Inspecciono la red para obtener "cantidad" rutas a bummer, de
+        Inspecciona la red para obtener "cantidad" rutas a bummer, de
         modo que se obtengan rutas cortas (porque es más probable que sean
         de capacidad máxima). Si alguna de estas rutas tiene como flujo la
-        capacidad de el puerto final o inicial se retorna esta como la ruta
+        capacidad del puerto final o inicial se retorna esta como la ruta
         por razones obvias.
         :return: List de las primeras "cantidad" rutas cortas a bummer
         '''
@@ -358,7 +366,7 @@ class Grafo:
     def maximo_flujo(self, n_rutas_a_evaluar):
         '''
         Se obtiene el flujo máximo y la ruta correspondiente a ese flujo
-        :return: List de flujo, ruta
+        :return: List de flujo y ruta correspondiente a ese flujo
         '''
         rutas = self.rutas_cortas(n_rutas_a_evaluar)
         if len(rutas) == 0:
@@ -367,3 +375,12 @@ class Grafo:
             return List(self.ruta_bummer.flujo, self.ruta_bummer)
         return max((List(i.flujo, i) for i in rutas),
                    key=lambda x: x[0])
+
+    def eliminar_ciclos(self):
+        '''
+        se obtienen los ciclos
+        '''
+
+
+if __name__ == '__main__':
+    graph = Grafo()

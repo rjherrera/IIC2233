@@ -21,8 +21,8 @@ class Menu:
               '2: Exportar ruta mínima a Bummer\n  ',
               '3: Exportar rutas de doble sentido\n  ',
               '4: Exportar ciclos triangulares y cuadrados\n  ',
-              '5: Exportar ruta de máxima capacidad\n',
-              '6: Exportar red sin ciclos\n',
+              '5: Exportar ruta de máxima capacidad\n  ',
+              '6: Exportar red sin ciclos\n  ',
               '7: Salir\n')
 
     def ejecutar(self):
@@ -60,5 +60,8 @@ class Menu:
 
 if __name__ == '__main__':
     grafo = dumper.Grafo()
+    print('Bienvenido:')
+    print('Realizando operaciones previas:\n')
     grafo.mapear_red()
+    print('\nPrograma cargado.')
     Menu(grafo).ejecutar()

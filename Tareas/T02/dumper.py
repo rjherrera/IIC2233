@@ -70,10 +70,10 @@ def output_maximo_flujo(grafo, ruta):
 
 
 def output_no_cycle(grafo, ruta):
+    ciclos_eliminados = grafo.eliminar_ciclos()
     print('Escribiendo ruta de máxima capacidad en "%s"' % ruta)
     with open(ruta, 'w') as f:
         f.write('Casi')
-        pass
     print('Resultado escrito en "%s"' % ruta)
 
 
