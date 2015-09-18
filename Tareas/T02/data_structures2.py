@@ -26,6 +26,10 @@ class Arbol:
         self.nodo_raiz = nodo_raiz
         self.len = 0
 
+    @property
+    def raiz(self):
+        return self.nodo_raiz.valor
+
     def add(self, valor):
         if self.nodo_raiz is None:
             self.nodo_raiz = Nodo(valor)
@@ -47,6 +51,17 @@ class Arbol:
                         temp = temp.hijo_derecho
         self.len += 1
 
+    def find(self, valor):
+        temp = self.nodo_raiz
+        while temp:
+            if valor == temp.valor:
+                return temp.valor
+            elif valor < temp.valor:
+                temp = temp.hijo_izquierdo
+            else:
+                temp = temp.hijo_derecho
+        return None
+
     def __iter__(self):
         return iter(self.nodo_raiz)
 
@@ -64,51 +79,18 @@ class Arbol:
                 temp = temp.hijo_derecho
         return False
 
-    def find(self, valor):
-        temp = self.nodo_raiz
-        while temp:
-            if valor == temp.valor:
-                return temp.valor
-            elif valor < temp.valor:
-                temp = temp.hijo_izquierdo
-            else:
-                temp = temp.hijo_derecho
-        return None
-
-
-class NodoComplejo(Nodo):
-
-    def __init__(self, valor_1, valor_2, padre=None):
-        self.valor_1 = valor_1
-        self.valor_2 = valor_2
-        valor = pseudo_hash(valor_1, valor_2)
-        super().__init__(valor, padre)
-
-
-class ArbolComplejo(Arbol):
-
-    def add(self, valor1, valor2):
-        if self.nodo_raiz is None:
-            self.nodo_raiz = NodoComplejo(valor1, valor2)
-        else:
-            temp = self.nodo_raiz
-            agregado = False
-            while not agregado:
-                if pseudo_hash(valor1, valor2) <= temp.valor:
-                    if temp.hijo_izquierdo is None:
-                        temp.hijo_izquierdo = NodoComplejo(
-                            valor1, valor2, temp.valor)
-                        agregado = True
-                    else:
-                        temp = temp.hijo_izquierdo
-                else:
-                    if temp.hijo_derecho is None:
-                        temp.hijo_derecho = NodoComplejo(
-                            valor1, valor2, temp.valor)
-                        agregado = True
-                    else:
-                        temp = temp.hijo_derecho
-        self.len += 1
+    def __getitem__(self, index):  # obtiene el i-ésimo valor, pero ordenado
+        if not isinstance(index, int):
+            raise IndexError('Arbol indices must be integers, not %s' %
+                             type(index).__name__)
+        if index < 0:
+            index += len(self)
+        iterator = iter(self)
+        if not 0 <= index < len(self):
+            raise IndexError('Arbol index out of range')
+        for i in range(index):
+            next(iterator)
+        return next(iterator).valor
 
 
 if __name__ == '__main__':
@@ -119,15 +101,15 @@ if __name__ == '__main__':
     arbol.add(3)
     arbol.add(20)
 
-    print(arbol.find(210))
+    print('Raiz:', arbol.raiz)
+    print('Index -2:', arbol[-2])
+    print('Index 4:', arbol[4])
 
-    print(21, 21 in arbol, 20, 20 in arbol)
+    print('Find 21:', arbol.find(21))
+    print('Find 20:', arbol.find(20))
 
-    print('Largo', len(arbol))
+    print('21 in arbol:', 21 in arbol)
+    print('20 in arbol:', 20 in arbol)
 
-    arbol_complejo = ArbolComplejo()
-    arbol_complejo.add(1, 2)
-
-    print(3 in arbol_complejo)
-
-    # print(arbol)
+    print('Largo:', len(arbol))
+    print('Phash(1100, 1000):', pseudo_hash(1122, 1035))

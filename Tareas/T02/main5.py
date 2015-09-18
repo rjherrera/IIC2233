@@ -9,14 +9,11 @@ from random import choice
 
 class Puerto:
 
-    # puertos = List()
-
     def __init__(self, id_puerto, conexiones=0):
         self.id = id_puerto
         self.posibles_conexiones = (conexiones if conexiones
                                     else st.posibles_conexiones())
         self.conexiones = List()
-        # self.__class__.puertos.append(self)
 
     @property
     def puertos(self):
@@ -37,13 +34,10 @@ class Puerto:
 
 class Conexion:
 
-    # conexiones = List()
-
     def __init__(self, id, origen=None, destino=None):
         self.id = id
         self.origen = origen
         self.destino = destino
-        # self.__class__.conexiones.append(self)
 
     def __eq__(self, other):
         return self.origen == other.origen and self.destino == self.destino
@@ -64,7 +58,7 @@ class Grafo:
         self.conexiones = List()
         self.puertos_id = Arbol()
         self.puertos = Arbol()
-        self.lista_puertos = List()
+        # self.lista_puertos = List()
         self.conexiones_id = Arbol()
 
     def encontrar_puertos(self):
@@ -89,7 +83,7 @@ class Grafo:
                 puerto_actual = Puerto(id_actual)
                 self.puertos.add(puerto_actual)
                 self.puertos_id.add(id_actual)
-                self.lista_puertos.append(puerto_actual)
+                # self.lista_puertos.append(puerto_actual)
                 n_puertos += 1
             conexiones = st.posibles_conexiones()
             siguiente_index = choice(range(conexiones))
@@ -99,15 +93,18 @@ class Grafo:
                 puerto_siguiente = Puerto(id_siguiente)
                 self.puertos.add(puerto_siguiente)
                 self.puertos_id.add(id_siguiente)
-                self.lista_puertos.append(puerto_siguiente)
+                # self.lista_puertos.append(puerto_siguiente)
                 n_conexiones += conexiones
                 n_puertos += 1
             iteraciones += 1
             actual_max = max(actual_max, id_siguiente)
-        print('%d puertos encontrados' % len(self.puertos),
+        n_puertos = len(self.puertos)
+        print('%d puertos encontrados' % n_puertos,
               'en %d iteraciones.' % iteraciones)
         print('Obteniendo conexiones...')
-        while iteraciones < 2000000:
+        estable = 0
+        n_anterior = 0
+        while estable < 2:
             id_actual, atrapado = st.preguntar_puerto_actual()
             conexiones = st.posibles_conexiones()
             siguiente_index = choice(range(conexiones))
@@ -126,39 +123,54 @@ class Grafo:
                     puerto = self.puertos.find(puerto_actual)
                     if puerto is not None:
                         puerto.conexiones.append(c)
-            if iteraciones % 200000 == 0:
+            if iteraciones % 500000 == 0:
+                if len(self.conexiones) == n_anterior:
+                    estable += 1  # comprueba que no cambien las cxs
+                n_anterior = len(self.conexiones)
                 from sys import stdout
-                print('.', end='')  # sublime dice syntax error, pero está bien
+                print('.', end='')  # sublime syntax error, pero está bien
                 stdout.flush()
-                # print(iteraciones, 'iteraciones:',
-                #       len(self.conexiones), 'conexiones.')
             iteraciones += 1
-        # print(self.puertos.nodo_raiz.valor.conexiones)
-        # print(self.puertos.nodo_raiz.valor.puertos)
         print('\n%d conexiones encontradas.' % len(self.conexiones))
 
-    def obtener_doble_via(self):
+    def rutas_doble_sentido(self):
         '''
         Se itera sobre la red de modo de obtener todos los puertos que
-        funcionan bidireccionalmente.
+        funcionan bidireccionalmente. Descarta las de destino == origen
         :return: List con conexiones que funcionan para ambos sentidos.
         '''
         dobles = List()
         for nodo in self.puertos:
             puerto = nodo.valor
-            for conexion in puerto.conexiones:
-                destino = self.puertos.find(conexion.destino)
-                for conexion2 in destino.conexiones:
-                    if conexion2.destino == puerto:
-                        if Conexion(0, destino, puerto) not in dobles:
-                            dobles.append(conexion)
+            for destino in puerto.puertos:
+                for destino_destino in destino.puertos:
+                    if destino_destino == puerto:
+                        if (Conexion(0, destino, puerto) not in dobles
+                                and destino != puerto):
+                            dobles.append(Conexion(0, puerto, destino))
+        dobles = List(*(List(i.origen, i.destino) for i in dobles))
+        # # DESCARTAR DOBLES SI TRIPLES O ENESIMAS
         return dobles
 
-    def output_puertos_conexiones(self, ruta):  # ejecutar post encontrar ruta
-        print('Escribiendo en "%s"' % ruta)
+    def output_rutas_doble_sentido(self, ruta):
+        dobles = self.rutas_doble_sentido()
+        print('Escribiendo rutas de doble sentido en "%s"' % ruta)
         with open(ruta, 'w') as f:
-            for puerto in grafo.lista_puertos:
-                linea = 'PUERTO %s\n' % str(puerto.id)
+            for conexion in dobles:
+                if len(conexion) == 2:
+                    f.write('PAR %d %d\n' % (conexion[0].id, conexion[1].id))
+                elif len(conexion) > 2:
+                    linea = 'RUTA %d' % conexion[0].id
+                    for i in conexion[1:]:
+                        linea += ' ' + str(i.id)
+                    f.write(linea + '\n')
+        print('Resultado escrito en "%s"' % ruta)
+
+    def output_puertos_conexiones(self, ruta):
+        print('Escribiendo puertos y conexiones en "%s"' % ruta)
+        with open(ruta, 'w') as f:
+            for nodo in grafo.puertos:  # puerto in grafo.lista_puertos
+                linea = 'PUERTO %s\n' % str(nodo.valor.id)  # puerto.id
                 f.write(linea)
             for conexion in grafo.conexiones:
                 linea = ('CONEXION %s %s\n' %
@@ -166,52 +178,60 @@ class Grafo:
                 f.write(linea)
         print('Resultado escrito en "%s"' % ruta)
 
-    def ruta_a_bummer(self, ruta):
-        inicio = grafo.puertos.nodo_raiz.valor
+    def ruta_a_bummer(self):
+        '''
+        Algoritmo BFS basado en lo encontrado en internet
+        '''
+        inicio = grafo.puertos.raiz
         final = Puerto(st.puerto_final())
-        queue = List()
-        queue.append(List(inicio))
-        while len(queue) > 0:
-            path = queue.popleft()
-            node = path[-1]
-            if node == final:
-                print('Escribiendo en "%s"' % ruta)
-                with open(ruta, 'w') as f:
-                    for i in range(len(path)):
-                        if i < len(path) - 1:
-                            origen = path[i].id
-                            destino = path[i + 1].id
-                            f.write('CONEXION %d %d\n' % (origen, destino))
-                print('Resultado escrito en "%s"' % ruta)
-                return path
-            for adjacent in node.puertos:
-                new_path = List(*path)
-                new_path.append(adjacent)
-                queue.append(new_path)
+        rutas = List()
+        rutas.append(List(inicio))
+        while len(rutas) > 0:
+            ruta_actual = rutas.popleft()
+            puerto = ruta_actual[-1]
+            if puerto == final:
+                return ruta_actual
+            for puerto_destino in puerto.puertos:
+                nuevo_camino = List(*ruta_actual)
+                nuevo_camino.append(puerto_destino)
+                rutas.append(nuevo_camino)
+
+    def output_ruta_a_bummer(self, ruta):
+        ruta_minima = self.ruta_a_bummer()
+        print('Escribiendo en "%s"' % ruta)
+        with open(ruta, 'w') as f:
+            for i in range(len(ruta_minima)):
+                if i < len(ruta_minima) - 1:
+                    origen = ruta_minima[i].id
+                    destino = ruta_minima[i + 1].id
+                    f.write('CONEXION %d %d\n' % (origen, destino))
+        print('Resultado escrito en "%s"' % ruta)
 
 
 if __name__ == '__main__':
     i = datetime.utcnow()
     grafo = Grafo()
     grafo.encontrar_puertos()
-    print(datetime.utcnow() - i)
+    print('\nMapearlared:', datetime.utcnow() - i)
+
     i = datetime.utcnow()
     grafo.output_puertos_conexiones(ruta='red.txt')
-    print(datetime.utcnow() - i)
-    i = datetime.utcnow()
-    dobles = grafo.obtener_doble_via()
-    print(dobles, len(dobles))
-    print(datetime.utcnow() - i)
+    print('Outputmapeo:', datetime.utcnow() - i)
 
     i = datetime.utcnow()
-    print('Final', Puerto(st.puerto_final()))
-    print('Ruta a bummer:', grafo.ruta_a_bummer('rutaABummer.txt'))
-    print(datetime.utcnow() - i)
+    print('\nPuertofinal:', Puerto(st.puerto_final()))
+    grafo.output_ruta_a_bummer(ruta='rutaABummer.txt')
+    print('rutaABummer:', datetime.utcnow() - i)
 
     i = datetime.utcnow()
+    print()
+    grafo.output_rutas_doble_sentido(ruta='rutasDobleSentido.txt')
+    print('Dossentidos:', datetime.utcnow() - i)
+
+    # i = datetime.utcnow()
     # with open('prueba.txt') as f:
     #     print(sum(int(i.strip().split()[3]) for i in f.readlines()))
-    print(datetime.utcnow() - i)
+    # print(datetime.utcnow() - i)
 
-    i = datetime.utcnow()
-    print(datetime.utcnow() - i)
+    # i = datetime.utcnow()
+    # print(datetime.utcnow() - i)
