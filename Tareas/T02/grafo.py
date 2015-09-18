@@ -369,6 +369,7 @@ class Grafo:
         :return: List de flujo y ruta correspondiente a ese flujo
         '''
         rutas = self.rutas_cortas(n_rutas_a_evaluar)
+        print('Encontrando la ruta de flujo mayor.')
         if len(rutas) == 0:
             if self.ruta_bummer is None:
                 self.ruta_a_bummer()
@@ -376,10 +377,38 @@ class Grafo:
         return max((List(i.flujo, i) for i in rutas),
                    key=lambda x: x[0])
 
-    def eliminar_ciclos(self):
+    def no_cycle(self, n):
         '''
-        se obtienen los ciclos
+        Se obtienen ciclos de profundidad máxima n y se eliminan,
+        guardandose en un nuevo atributo self.sin_ciclos
+        :return: None
         '''
+        self.sin_ciclos = List(*(i for i in self.conexiones))
+        ciclos = List()
+        for puerto in self.puertos:
+            puerto = puerto.valor
+            camino = find_cycle(puerto, puerto, n, List())
+            if len(camino) != 0:
+                if camino[-1] == puerto:
+                    ciclos.append(camino)
+        print('Removiendo ciclos.')
+        for camino in ciclos:
+            cxs = List(*(Conexion(
+                0, camino[i], camino[i + 1]) for i in range(len(camino) - 1)))
+            print('.', end='')
+            stdout.flush()
+            for conexion in cxs:
+                if conexion in self.sin_ciclos:
+                    self.sin_ciclos = self.sin_ciclos.remove(conexion)
+        print('\nCiclos eliminados.')
+
+
+def find_cycle(puerto_i, puerto_actual, profundidad, camino, acumulada=0):
+    if (puerto_actual == puerto_i and acumulada != 0) or acumulada >= profundidad:
+        return camino
+    for i in puerto_actual.puertos:
+        n_camino = camino + List(i)
+        return find_cycle(puerto_i, i, profundidad, n_camino, acumulada + 1)
 
 
 if __name__ == '__main__':

@@ -79,7 +79,7 @@ Para esta sección se procede a evaluar distintas rutas, obteniendolas extendien
 
 ### Eliminar ciclos
 
-En construcción...
+Para eliminar los ciclos que hacen ineficiente a Bummer se opta por buscar los ciclos de profundidad menor que 100, es decir que se demoran hasta 100 conexiones en volver al puerto de origen. Luego se eliminan dichos puertos.
 
 ## Outputs
 

@@ -70,10 +70,17 @@ def output_maximo_flujo(grafo, ruta):
 
 
 def output_no_cycle(grafo, ruta):
-    ciclos_eliminados = grafo.eliminar_ciclos()
-    print('Escribiendo ruta de máxima capacidad en "%s"' % ruta)
+    grafo.no_cycle(60)
+    print('Escribiendo puertos y conexiones acíclicas en "%s"' % ruta)
     with open(ruta, 'w') as f:
-        f.write('Casi')
+        for nodo in grafo.puertos:  # puerto in grafo.lista_puertos
+            linea = 'PUERTO %s\n' % str(nodo.valor.id)  # puerto.id
+            f.write(linea)
+        for conexion in grafo.sin_ciclos:
+            linea = ('CONEXION %s %s%s\n' %
+                     (conexion.origen.id, conexion.destino.id,
+                      conexion.tipo))
+            f.write(linea)
     print('Resultado escrito en "%s"' % ruta)
 
 
@@ -108,6 +115,11 @@ if __name__ == '__main__':
     print()
     output_maximo_flujo(grafo=grafo, ruta='rutaMaxima.txt')
     print('FlujoMáximo:', datetime.utcnow() - i)
+
+    i = datetime.utcnow()
+    print()
+    output_no_cycle(grafo=grafo, ruta='noCycle.txt')
+    print('RedAcíclica:', datetime.utcnow() - i)
 
     # i = datetime.utcnow()
     # print()
