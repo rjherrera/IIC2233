@@ -1,82 +1,64 @@
-# import inspect
-import sistema as st
-from random import choice, shuffle
-
-# all_functions = inspect.getmembers(sistema, inspect.isfunction)
-# imported_stuff = dir(sistema)
-
-print(st.preguntar_puerto_actual())
-print(st.posibles_conexiones())
-print(st.hacer_conexion(6))
-print(st.preguntar_puerto_actual())
-print(st.preguntar_puerto_actual())
-print(st.puerto_inicio())
-print(st.puerto_final())
-print()
-print(st.preguntar_puerto_robot())
-# st.pregunta_nodo_actual()
-print()
-print(st.get_capacidad())
+# coding=utf-8
+import dumper
 
 
-class Puerto:
+class Menu:
 
-    def __init__(self, id_puerto, puerto_anterior=None):
-        self.id = id_puerto
-        self.anterior = puerto_anterior
-        self.siguientes = list(range(st.posibles_conexiones()))
+    def __init__(self, grafo):
+        self.grafo = grafo
+        self.opciones = {
+            '1': self.red,
+            '2': self.minima,
+            '3': self.dobles,
+            '4': self.ciclos,
+            '5': self.maxima,
+            '6': self.nocycl,
+        }
 
-    def __eq__(self, other):
-        return self.id == other
+    def mostrar(self):
+        print('\nMenu:\n  ',
+              '1: Exportar red\n  ',
+              '2: Exportar ruta mínima a Bummer\n  ',
+              '3: Exportar rutas de doble sentido\n  ',
+              '4: Exportar ciclos triangulares y cuadrados\n  ',
+              '5: Exportar ruta de máxima capacidad\n',
+              '6: Exportar red sin ciclos\n',
+              '7: Salir\n')
 
-
-class Camino:
-
-    current_id = 1
-
-    def __init__(self):
-        self.id = self.__class__.current_id
-        self.__class__.current_id += 1
-        self.puerto_actual = Puerto(st.puerto_inicio())
-        self.puertos = [self.puerto_actual]
-        self.puerto_final = st.puerto_final()
-        self.recorrido = str(self.id)
-
-    def recorrer(self):
-        actual = self.puerto_actual
-        print(self.puerto_final, actual.id)
-        if actual.id == self.puerto_final:
-            return True
-        shuffle(actual.siguientes)
-        for siguiente in actual.siguientes:
-            st.hacer_conexion(siguiente)
-            id_siguiente = st.preguntar_puerto_actual()[0]
-            if id_siguiente in self.puertos:
-                puerto = self.obtener_puerto(id_siguiente)
+    def ejecutar(self):
+        while True:
+            self.mostrar()
+            eleccion = input('Ingrese una opcion: ')
+            if eleccion == '7':
+                return
+            accion = self.opciones.get(eleccion)
+            if accion:
+                accion()
             else:
-                puerto = Puerto(id_siguiente, puerto_anterior=actual)
-            self.puerto_actual = puerto
-            self.recorrido += '-->%d' % id_siguiente
-            return self.recorrer()
-        return False
+                print('%s no es una de las opciones, pruebe de nuevo.'
+                      % eleccion)
 
-    def obtener_puerto(self, id_puerto):
-        for puerto in self.puertos:
-            if puerto.id == id_puerto:
-                return puerto
-        return None
+    def red(self):
+        return dumper.output_puertos_conexiones(self.grafo, 'red.txt')
+
+    def minima(self):
+        return dumper.output_ruta_a_bummer(self.grafo, 'rutaABummer.txt')
+
+    def dobles(self):
+        return dumper.output_rutas_doble_sentido(
+            self.grafo, 'rutasDobleSentido.txt')
+
+    def ciclos(self):
+        return dumper.output_ciclos(self.grafo, 'ciclos.txt')
+
+    def maxima(self):
+        return dumper.output_maximo_flujo(self.grafo, 'rutaMaxima.txt')
+
+    def nocycl(self):
+        return dumper.output_no_cycle(self.grafo, 'noCycle.txt')
 
 
-
-
-
-        # self.recorrido += '-->'
-
-
-camino = Camino()
-camino.recorrer()
-
-
-
-def obtener_camino():
-    pass
+if __name__ == '__main__':
+    grafo = dumper.Grafo()
+    grafo.mapear_red()
+    Menu(grafo).ejecutar()

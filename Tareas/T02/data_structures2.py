@@ -1,3 +1,4 @@
+# coding=utf-8
 def pseudo_hash(value1, value2):
     return value1 * 100000000 + value2
 

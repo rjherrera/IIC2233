@@ -1,3 +1,4 @@
+# coding=utf-8
 class Elemento:
 
     def __init__(self, valor=None):
@@ -32,6 +33,13 @@ class List:
         self.len -= 1
         return elemento.valor
 
+    def remove(self, elemento):  # diferente porque retorna nueva lista
+        if elemento not in self:
+            raise ValueError('Lista.remove(x): x not in Lista')
+        for i in range(len(self)):
+            if self[i] == elemento:
+                return self[:i] + self[i + 1:]
+
     # def pop(self, index=-1):
     #     length = len(self)
     #     returning = self[index]
@@ -44,13 +52,26 @@ class List:
     # def __contains__(self, element):
     #     return bool(filter(lambda x: x == element, self))
 
+    def __eq__(self, other):
+        return len(self) == sum(map(lambda x: x[0] == x[1], zip(self, other)))
+
     def __len__(self):
         return self.len
+
+    def __add__(self, other):
+        new = List()
+        for i in self:
+            new.append(i)
+        for i in other:
+            new.append(i)
+        return new
 
     def __getitem__(self, index):
         if isinstance(index, slice):
             step = 1 if index.step is None else index.step
             stop = len(self) if index.stop is None else index.stop
+            if stop < 0:
+                stop += len(self)
             start = 0 if index.start is None else index.start
             return List(*(self[i] for i in range(start, stop, step)))
         if not isinstance(index, int):
@@ -95,14 +116,20 @@ if __name__ == '__main__':
     # print(len(Lista()))
     # print(lista.pop())
     print(lista)
+    print(lista + lista)
+    print(lista.remove(6))
+    print(lista.remove('AAA')[:-1])
     # print([1, 2, 3][1])
     # print(lista, lista.ultimo, lista.primero)
-    # print(Lista(*reversed(lista)))
-    # print(Lista(*map(str, [1,2,3])))
-    # print(Lista(*lista))
+    print(List(*reversed(lista)))
+    print(List(*map(str, [1, 2, 3])))
+    print(List(*lista))
 
-    # print(list(i for i in lista))
+    a, b = List(1, 2)
+    print(a, b)
+
+    print(list(i for i in lista))
 
     # del lista[1]
-    # lista.append(8)
-    # print(lista)
+    lista.append(8)
+    print(lista)
