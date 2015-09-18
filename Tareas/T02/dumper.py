@@ -70,7 +70,7 @@ def output_maximo_flujo(grafo, ruta):
 
 
 def output_no_cycle(grafo, ruta):
-    grafo.no_cycle(60)
+    grafo.no_cycle(100)
     print('Escribiendo puertos y conexiones acíclicas en "%s"' % ruta)
     with open(ruta, 'w') as f:
         for nodo in grafo.puertos:  # puerto in grafo.lista_puertos
