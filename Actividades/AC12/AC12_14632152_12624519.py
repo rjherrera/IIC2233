@@ -34,11 +34,13 @@ class Bummer:
                     print("Se inscribio el curso de sigla {0} a {1}".format(
                         ramo_inscribir.sigla, self.usuario_actual.usuario))
             except IndexError:
-                print('No se inscribió el ramo, por un IndexError: el número %d' % numero,
+                print('No se inscribió el ramo a %s,' % self.usuario_actual.usuario,
+                      'por un IndexError: el número %d' % numero,
                       'ingresado está fuera del rango (máximo: %d).' %
                       (len(self.ramos) - 1))
             except TypeError:
-                print('No se inscribió el ramo, por un TypeError: ingresó el valor %r' % numero,
+                print('No se inscribió el ramo a %s,' % self.usuario_actual.usuario,
+                      'por un TypeError: ingresó el valor %r' % numero,
                       'pero debe ingresar un dígito.')
 
     def quitar_ramo(self, numero):
@@ -72,7 +74,8 @@ class Bummer:
                       'no se encuentra en los ramos del usuario %s.' %
                       self.usuario_actual.usuario)
             except ValueError:
-                print('No se calificó el ramo por un ValueError: se ingresó %r' % nota,
+                print('No se calificó el ramo de %s' % self.usuario_actual.usuario,
+                      'por un ValueError: se ingresó %r' % nota,
                       'y se esperaba un número decimal.')
             except IndexError:
                 print('No se calificó el ramo, por un IndexError: el número %d' % numero,
