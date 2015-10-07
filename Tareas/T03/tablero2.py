@@ -21,10 +21,10 @@ class Tablero:
         return False
 
     def __str__(self):
-        string = 'Marítimo:'.ljust(self.n * 4) + '  :··: Aéreo:\n'
+        string = '\nMarítimo:'.ljust(self.n * 2) + '  :··: Aéreo:\n'  # es * 4
         for i in range(self.n):
-            string += '| ' + ' | '.join(self.maritimo[i]) + ' | :··: '
-            string += '| ' + ' | '.join(self.aereo[i]) + ' |\n'
+            string += '|' + '|'.join(self.maritimo[i]) + '| :··: '  # espacios antes y dps
+            string += '|' + '|'.join(self.aereo[i]) + '|\n'
         return string
 
     def asignar(self, lista, posicion, vehiculo):
@@ -48,13 +48,21 @@ class Tablero:
                 return self.aereos[key]
         raise KeyError('Vehiculo %r no encontrado.' % letra_vehiculo)
 
+    def obtener_vehiculo_unico(self, letra_vehiculo):
+        vehiculo = self.obtener_vehiculo_letra(letra_vehiculo)
+        if vehiculo.letra not in self:
+            return vehiculo
+        raise KeyError('Vehículo %s ya posicionado.' % vehiculo)
+
     def obtener_posiciones(self, vehiculo, posicion, orientacion):
         try:
+            posicion = tuple(int(i) for i in posicion.split(','))
             posiciones = vehiculo.generar_posiciones(posicion)[orientacion]
+            vehiculo.orientacion = orientacion
             return posiciones
         except KeyError:
             raise KeyError('%r no es una orientacion válida.' % orientacion)
-        except TypeError:
+        except (TypeError, ValueError, IndexError):
             raise TypeError('%r no es un par de coordenadas válido.' % posicion)
 
     def verificar_posiciones(self, posiciones):
@@ -65,25 +73,20 @@ class Tablero:
                 return False, pos
         return True, None
 
-    def posicionar(self, letra_vehiculo, posicion, orientacion):
+    def posicionar(self, vehiculo, posiciones):
         try:
-            vehiculo = self.obtener_vehiculo_letra(letra_vehiculo)
-            posiciones = self.obtener_posiciones(vehiculo, posicion, orientacion)
             tablero = self.maritimo
             if vehiculo.__class__ in self.__class__.aereos:
                 tablero = self.aereo
-            if vehiculo.letra not in self:
-                verificacion = self.verificar_posiciones(posiciones)
-                if verificacion[0]:
-                    for pos in posiciones:
-                        self.asignar(tablero, pos, vehiculo)
-                    self.posicionados.append(vehiculo)
-                else:
-                    pos = verificacion[1]
-                    raise IndexError
-                vehiculo.posiciones_actuales = posiciones
+            verificacion = self.verificar_posiciones(posiciones)
+            if verificacion[0]:
+                for pos in posiciones:
+                    self.asignar(tablero, pos, vehiculo)
+                self.posicionados.append(vehiculo)
             else:
-                print('%s ya posicionado.' % letra_vehiculo)
+                pos = verificacion[1]
+                raise IndexError
+            vehiculo.posiciones_actuales = posiciones
         except (KeyError, ValueError, TypeError) as err:
             print(err.args[0])
         except IndexError as err:
@@ -91,42 +94,54 @@ class Tablero:
 
     @property
     def letras_vehiculos(self):
-        string = 'Vehículos disponibles ("Letra: Nombre (Área)"): \n  '
-        for i, j in self.maritimos.items():
-            string += ('%s: %s %r' % (j.letra, i, j.area)).ljust(30)
-        string += '\n  '
-        for i, j in self.aereos.items():
-            string += ('%s: %s %r' % (j.letra, i, j.area)).ljust(30)
+        string = '\nVehículos disponibles ("Letra: Nombre (Área)"):\n'
+        string = 'Mar:'.ljust(30) + 'Aire:\n '
+        lm = [(j.letra, i, j.area) for i, j in self.maritimos.items()]
+        la = [(j.letra, i, j.area) for i, j in self.aereos.items()]
+        for i in range(len(lm) - 1):
+            string += ('%s: %s %r' % (lm[i][0], lm[i][1], lm[i][2])).ljust(30)
+            string += '%s: %s %r\n ' % (la[i][0], la[i][1], la[i][2])
+        string += '%s: %s %r' % (lm[-1][0], lm[-1][1], lm[-1][2])
         return string
 
     def distribuir(self):
-        print(self.letras_vehiculos)
         while len(self.posicionados) < 7:
+            print(self.letras_vehiculos)
+            print(self)
             vehiculo = input('Elija un vehiculo para posicionar (Ej: \'B\'): ')
+            try:
+                vehiculo = self.obtener_vehiculo_unico(vehiculo)
+            except KeyError as error:
+                print(error.args[0])
+                continue
             posicion = input('Elija coordenadas para el vehículo (Ej: 0, 1): ')
-            posicion = posicion.replace(' ', '').split(',')
+            posicion = posicion.replace(' ', '')
             orientacion = input('Elija una orientacion (H/V): ').upper()
             try:
-                self.posicionar(vehiculo,
-                                tuple(int(i) for i in posicion),
-                                orientacion)
-            except ValueError:
-                print('%r no es un par de coordenadas válido.' % posicion)
-            print(self)
+                posiciones = self.obtener_posiciones(vehiculo,
+                                                     posicion,
+                                                     orientacion)
+            except (KeyError, TypeError) as error:
+                print(error.args[0])
+                continue
+            self.posicionar(vehiculo, posiciones)
 
 
 if __name__ == '__main__':
     t = Tablero(15)
-    # v = t.obtener_vehiculo('AvionCaza')
-    # v = t.obtener_vehiculo('AvionExplorador')
-    # v2 = t.obtener_vehiculo('BuqueDeGuerra')
-    # p = t.obtener_posiciones(v, (0, 0), 'H')
-    ps = t.posicionar('Bd', (0, 1), 'horizontals')
-    ps = t.posicionar('B', 6, 'horizontals')
-    ps = t.posicionar('B', (0, 100), 'H')
-    ps = t.posicionar('B', (0, 1), 'H')
-    ps = t.posicionar('B', (0, 1), 'H')
-    ps = t.posicionar('B', (0, 1), 'H')
-    ps = t.posicionar('E', (12, 1), 'H')
+    v = t.obtener_vehiculo('AvionCaza')
+    v1 = t.obtener_vehiculo('AvionExplorador')
+    v = t.obtener_vehiculo('BuqueDeGuerra')
+    p = t.obtener_posiciones(v, '0,1', 'H')
+    p1 = t.obtener_posiciones(v, '6,0', 'H')
+    p2 = t.obtener_posiciones(v, '0,100', 'H')
+    p3 = t.obtener_posiciones(v, '14,1', 'H')
+    ps = t.posicionar(v, p)
+    ps = t.posicionar(v, p1)
+    ps = t.posicionar(v, p2)
+    ps = t.posicionar(v, p)
+    ps = t.posicionar(v, p)
+    ps = t.posicionar(v, p)
+    ps = t.posicionar(v1, p3)
     print(t.letras_vehiculos)
     print(t)

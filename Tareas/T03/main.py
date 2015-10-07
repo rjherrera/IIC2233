@@ -1,5 +1,6 @@
-from tablero import Tablero
-
+import os
+from tablero2 import Tablero
+from random import choice
 
 # def posicionar(tablero):
 #     while
@@ -12,46 +13,61 @@ from tablero import Tablero
 #     except ValueError:
 #         print('%s no es un entero.' % n)
 
+def clean_screen():
+    for _ in range(5):
+        os.system('cls' if os.name == 'nt' else 'clear')
+
 
 class Menu:
 
     def __init__(self, jugador1, jugador2, n):
-        self.tableros = {'j1': Tablero(n), 'j2': Tablero(n)}
-        # self.opciones = {
-        #     '1': self.red,
-        #     '2': self.minima,
-        #     '3': self.dobles,
-        #     '4': self.ciclos,
-        #     '5': self.maxima,
-        #     '6': self.nocycl,
-        # }
+        self.tableros = {jugador1: Tablero(n), jugador2: Tablero(n)}
+        self.jugador1 = jugador1
+        self.jugador2 = jugador2
+        self.opciones = {
+            '1': self.atacar,
+            '2': self.mover,
+            '3': self.radar
+        }
 
     def mostrar(self):
         print('\nMenu:\n  ',
-              '1: Exportar red\n  ',
-              '2: Exportar ruta mínima a Bummer\n  ',
-              '3: Exportar rutas de doble sentido\n  ',
-              '4: Exportar ciclos triangulares y cuadrados\n  ',
-              '5: Exportar ruta de máxima capacidad\n  ',
-              '6: Exportar red sin ciclos\n  ',
-              '7: Salir\n')
+              '1: Atacar\n  ',
+              '2: Mover\n  ',
+              '3: Ver el radar\n  ',
+              '4: Salir')
+
+    def atacar(self, jugador, receptor):
+        self.tableros[jugador].atacar(self.tableros[receptor])
 
     def ejecutar(self):
-        self.tableros['j1'].distribuir()
-        import os
-        os.system('cls' if os.name == 'nt' else 'clear')
-        self.tableros['j2'].distribuir()
+        self.tableros[self.jugador1].distribuir()
+        clean_screen()
+        print('%s distribuido correctamente' % self.jugador1)
+        self.tableros[self.jugador2].distribuir()
+        print('%s distribuido correctamente' % self.jugador2)
+        jugs = [self.jugador1, self.jugador2]
+        primero = choice(jugs)
+        segundo = [i for i in jugs if i != primero][0]
+        turno = 0
         while True:
+            if turno % 2 == 0:
+                actual = primero
+                siguiente = segundo
+            else:
+                actual = segundo
+                siguiente = primero
             self.mostrar()
             eleccion = input('Ingrese una opcion: ')
-            # if eleccion == '7':
-            #     return
-            # accion = self.opciones.get(eleccion)
-            # if accion:
-            #     accion()
-            # else:
-            #     print('%s no es una de las opciones, pruebe de nuevo.'
-            #           % eleccion)
+            if eleccion == '4':
+                return
+            accion = self.opciones.get(eleccion)
+            if accion:
+                accion(actual, siguiente)
+            else:
+                print('%s no es una de las opciones, pruebe de nuevo.'
+                      % eleccion)
+            turno += 1
 
 
 if __name__ == '__main__':

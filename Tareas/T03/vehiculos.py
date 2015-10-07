@@ -5,6 +5,10 @@ class Vehiculo:
 
     def __init__(self):
         self.posiciones_actuales = []
+        self.movimientos = 0
+        self.ataques_recibidos = 0
+        self.dano_recibido = 0
+        self.orientacion = 'H'
 
     def generar_posiciones(self, inicial):
         vertical = [(inicial[0] + i, inicial[1] + j)
@@ -12,6 +16,14 @@ class Vehiculo:
         horizont = [(inicial[0] + i, inicial[1] + j)
                     for i in range(self.area[1]) for j in range(self.area[0])]
         return {'V': vertical, 'H': horizont}
+
+    def __str__(self):
+        return self.__class__.__name__
+
+    def recibir_ataque(self, ataque):
+        self.ataques_recibidos += 1
+        self.dano_recibido += ataque.dano
+        self.resistencia -= ataque.dano
 
 
 class BarcoPequeno(Vehiculo):
