@@ -34,6 +34,8 @@ como para poder obtenerlos
 
 Muy poco testing, no se alcanzó a desarrollar más, sin embargo se tuvo el cuidado de tener las funciones sin inputs por el lado de los modulos tablero, vehiculos y ataques, de modo que los inputs solo estuvieran en main.py
 
+## Contra el PC
 
+No se implementó
 
 # Por temas familiares/personales empecé la tarea el lunes 5, por eso la mediocridad. Lo siento :(
