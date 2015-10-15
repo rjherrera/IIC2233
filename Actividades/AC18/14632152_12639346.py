@@ -78,12 +78,15 @@ def generador_clientes(env, lambdat, res):
 
 if __name__ == '__main__':
     env = simpy.Environment()
-    mesas = TABLES  # input('Ingrese una cantidad de mesas: ')
+    print('Tenga cuidado de ingresar enteros.')
+    mesas = int(input('Ingrese una cantidad de mesas: '))
+    intervalo = int(input('Ingrese un intervalo: '))
+    limite = int(input('Ingrese un numero entero de tiempo de simulacion: '))
     res = Restaurante(env, mesas)
-    print('Se inicia el día con %d mesas disponibles.' % TABLES)
-    gen = generador_clientes(env, INTERVAL, res)
+    print('Se inicia el día con %d mesas disponibles.' % mesas)
+    gen = generador_clientes(env, intervalo, res)
     env.process(gen)
-    env.run(until=SIM_TIME)
+    env.run(until=limite)
     print('Se atendieron %d clientes en el día de un total de %d que llegaron.'
           % (res.n_atendidos, res.n_clientes))
     print('Se fueron por llamada %d clientes.' % res.n_idos_llamada)
