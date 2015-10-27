@@ -22,7 +22,9 @@ def read_tweets_window(start, end, todo, tweets, players_names):
         tiempo = transform_event_time(tweets[i]['hora'])
         for i in palabras:
             if len(i) >= 4 and start <= tiempo <= end:
-                if i in words_frequency:
+                # fue pensado para que la fx entrefara los minutos y dps me
+                # me di cuenta de que entregaba el string la funcion
+                if i not in words_frequency:
                     words_frequency[i] = todo.count(i)
     players_frequency = {}
     # Filtrar palabras infrecuentes
@@ -104,5 +106,6 @@ if __name__ == "__main__":
     print(events, len(events))
     print(tweets, len(tweets))
     print(read_tweets_window(90, 95, todo, tweets, players))
+    # lo pense con minutos
     # players_words = load_names_players(players)
     # events_statistics = frequent_words(tweets, events, players_words)
