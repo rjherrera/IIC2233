@@ -13,7 +13,7 @@
 0,11 casa de madera [19, 34]
 0,12 casa de ladrillos [14, 31]
 0,13 calle arriba
-0,14 casa de madera [20, 35]
+0,14 calle arriba
 0,15 casa de metal [18, 31]
 0,16 casa de hormigon [16, 35]
 0,17 calle abajo

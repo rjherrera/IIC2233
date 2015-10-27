@@ -19,7 +19,7 @@ class GrillaSimulacion(*grilla_simulacion_ui):
         self.rows = rows
         self.cols = cols
 
-        dim = 800 // max(rows, cols)
+        dim = 700 // max(rows, cols)
 
         self.width = cols * dim
         self.height = rows * dim
