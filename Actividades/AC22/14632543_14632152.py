@@ -102,8 +102,17 @@ class InstaPUC:
         idat = compress(idat, 9)
         with open(outFile, 'wb') as file:
             file.write(signature)
-            file.write(ihdr)
-            file.idat(idat)
+            file.write(13.to_bytes(4, byteorder='big'))
+            file.write(ihdr['ancho'].to_bytes(4, byteorder='big'))
+            file.write(ihdr['alto'].to_bytes(4, byteorder='big'))
+            file.write(ihdr['profundidad'].to_bytes(1, byteorder='big'))
+            file.write(ihdr['colores'].to_bytes(1, byteorder='big'))
+            file.write(ihdr['compresion'].to_bytes(1, byteorder='big'))
+            file.write(ihdr['filtro'].to_bytes(1, byteorder='big'))
+            file.write(ihdr['entrelazado'].to_bytes(1, byteorder='big'))
+            file.write(len(idat).to_bytes(4, byteorder='big'))
+            file.write(idat)
+            file.write(0.to_bytes(4, byteorder='big')
             file.write(iend)
         ########################################
         #                                      #
