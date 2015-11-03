@@ -62,6 +62,10 @@ def agregar_amigo(id_1, id_2):
         if id_2 not in persona.amigos:
             persona.amigos.append(id_2)
         write_persona(persona)
+        persona_2 = get_persona(id_2)
+        if id_1 not in persona_2.amigos:
+            persona_2.amigos.append(id_1)
+        write_persona(persona_2)
 
 
 def set_persona_favorita(_id, id_favorito):
