@@ -13,16 +13,25 @@ class Persona:
         self.amigos = amigos
         self.persona_favorita = persona_favorita
         self.n_guardados = 0
-        self._ultimo_guardado = datetime.now()
+        self.ultimo_guardado = None
 
-    @property
-    def ultimo_guardado(self):
-        return self._ultimo_guardado
+    def __getstate__(self):
+        dicc = self.__dict__.copy()
+        dicc['n_guardados'] += 1
+        dicc['ultimo_guardado'] = datetime.now()
+        return dicc
 
-    @ultimo_guardado.setter
-    def ultimo_guardado(self, value):
-        self.n_guardados += 1
-        self._ultimo_guardado = value
+    def __setstate__(self, estado):
+        self.__dict__ = estado
+
+    # @property
+    # def ultimo_guardado(self):
+    #     return self._ultimo_guardado
+
+    # @ultimo_guardado.setter
+    # def ultimo_guardado(self, value):
+    #     self.n_guardados += 1
+    #     self._ultimo_guardado = value
 
 
 def existe_persona(_id):
@@ -38,7 +47,6 @@ def get_persona(_id):
 
 def write_persona(persona):
     with open('db/' + persona.id + '.iic2233', 'wb') as file:
-        persona.ultimo_guardado = datetime.now()
         pickle.dump(persona, file)
 
 
@@ -50,26 +58,23 @@ def crear_persona(_id, nombre_completo):
 
 def agregar_amigo(id_1, id_2):
     if existe_persona(id_1) and existe_persona(id_2):
-        with open('db/' + id_1 + '.iic2233', 'rb') as file:
-            persona = pickle.load(file)
-        persona.amigos.append(id_2)
-        with open('db/' + id_1 + '.iic2233', 'wb') as file:
-            persona.ultimo_guardado = datetime.now()
-            pickle.dump(persona, file)
+        persona = get_persona(id_1)
+        if id_2 not in persona.amigos:
+            persona.amigos.append(id_2)
+        write_persona(persona)
 
 
 def set_persona_favorita(_id, id_favorito):
     if existe_persona(_id) and existe_persona(id_favorito):
-        with open('db/' + _id + '.iic2233', 'rb') as file:
-            persona = pickle.load(file)
+        persona = get_persona(_id)
         persona.persona_favorita = id_favorito
-        with open('db/' + _id + '.iic2233', 'wb') as file:
-            persona.ultimo_guardado = datetime.now()
-            pickle.dump(persona, file)
+        write_persona(persona)
 
 
 def get_persona_mas_favorita():
     lista_personas = [get_persona(i.split('.')[0]) for i in os.listdir('db')]
+    # asumo que solo hay esos archivos en la carpeta db, funciona en linux
+    # parece que en mac se crean archivos raros pero en mi pc funciona
     lista_favs = [[i.nombre_completo, 0, i.id] for i in lista_personas]
     for persona in lista_personas:
         fav = persona.persona_favorita
