@@ -13,6 +13,7 @@ class Service:
         while True:
             if self.gato.revisar_ganador():
                 print('Gano el jugador %s' % self.gato.turno)
+                sys.exit()
             print(self.gato)
             pos = self.cliente.recv(1024)
             pos = pos.decode('ascii')
@@ -22,6 +23,7 @@ class Service:
     def enviar(self, mensaje):
         if self.gato.revisar_ganador():
             print('Gano el jugador %s' % self.gato.turno)
+            sys.exit()
         if mensaje:   # la idea es q si no te toca no ingreses nada
             pos = tuple(int(i) for i in mensaje.split(','))
             self.gato.editar_posicion(pos)
