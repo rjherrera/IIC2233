@@ -7,6 +7,11 @@ from datetime import timedelta
 _ZOMBIE = {'walk': (32, 89), 'attack': (96, 169), 'die': (176, 225)}
 _MAGE = {'walk': (32, 89), 'attack': (96, 169), 'die': (176, 217)}
 _SPRITE_SIZE = 100
+_CORNER_DIR = {'L': 0, 'TL': 1, 'T': 2, 'TR': 3,
+               'R': 4, 'BR': 5, 'B': 6, 'BL': 7}
+_R = 2  # desplazamiento
+_DIR_MOVEMENT = {0: (-_R, 0), 1: (-_R, -_R), 2: (0, -_R), 3: (_R, -_R),
+                 4: (_R, 0), 5: (_R, _R), 6: (0, _R), 7: (-_R, _R)}
 
 
 def get_corner(height, width, x, y):
@@ -73,9 +78,6 @@ class Sprite:
 
 class CharacterSprite(Sprite):
 
-    CORNER_DIR = {'L': 0, 'TL': 1, 'T': 2, 'TR': 3,
-                  'R': 4, 'BR': 5, 'B': 6, 'BL': 7}
-
     def __init__(self, ranges, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.movements = {'walk': self.walk,
@@ -92,8 +94,8 @@ class CharacterSprite(Sprite):
         return self._current_frame + self._direction + self._start_frame
 
     def set_direction(self, corner):
-        if corner in self.CORNER_DIR:
-            self._direction = self.CORNER_DIR[corner]
+        if corner in _CORNER_DIR:
+            self._direction = _CORNER_DIR[corner]
 
     def walk(self):
         self._start_frame, self._stop_frame = self.ranges['walk']
@@ -127,13 +129,21 @@ class MainWindow(form[0], form[1]):
         super().__init__()
         self.setupUi(self)
 
+        BG_TILE = 'sources/Wooden_Floor_Tile.gif'
+        # TOP_TILE = 'sources/White_Stone_Tile.gif'
+        css = 'QWidget#widget { background-image: url(%s); }' % BG_TILE
+        self.widget.setStyleSheet(css)
+        # css_main = ('QWidget#centralwidget { background-image: url(%s); }'
+        #             % TOP_TILE)
+        # self.centralwidget.setStyleSheet(css_main)
+
         # PLAYER
         self.labelPlayer.setScaledContents(True)
         self.labelPlayer.resize(_SPRITE_SIZE, _SPRITE_SIZE)
         self.center_label(self.labelPlayer)
         self.animation = CharacterSprite(_MAGE, 'skeleton_mage.png',
                                          256, 256, self.labelPlayer)
-        self.animation.play(interval=150, fx='walk')
+        self.animation.play(interval=150, fx='stand')
         # PLAYER
 
         # TIEMPO DE JUEGO
@@ -148,7 +158,7 @@ class MainWindow(form[0], form[1]):
         self.zombie_timer.start()
         self.labels = []
         self.animations = []
-        for i in range(50):
+        for i in range(10):
             label = QtGui.QLabel('', self.widget)
             self.labels.append(label)
             label.move(1, 50)
@@ -169,6 +179,12 @@ class MainWindow(form[0], form[1]):
 
         # SCORE
         self.score = 0
+        self.ammo = 30
+        self.progressBarAmmo.setValue(self.ammo)
+        self.progressBarAmmo.setMaximum(self.ammo)
+        self.health = 100
+        self.progressBarHealth.setValue(self.health)
+        self.progressBarHealth.setMaximum(self.health)
         # SCORE
 
         # hacer que se siga el mouse para todos los childs?
@@ -188,6 +204,10 @@ class MainWindow(form[0], form[1]):
     def update_score(self):
         self.labelScore.setText(str(self.score))
 
+    def update_ammo(self, value):
+        self.progressBarAmmo.setValue(self.ammo + value)
+        self.ammo = self.progressBarAmmo.value()
+
     def time(self):
         self.time_elapsed += timedelta(seconds=1)
         self.labelTime.setText(str(self.time_elapsed)[2:7])
@@ -198,18 +218,20 @@ class MainWindow(form[0], form[1]):
     def mouseMoveEvent(self, QMouseEvent):
         x = QMouseEvent.x() - self.labelPlayer.x()  # 260 = POS_PLAYER_X
         y = -(QMouseEvent.y() - self.labelPlayer.y())  # 150 = POS_PLAYER_Y
-        m = get_corner(_SPRITE_SIZE, _SPRITE_SIZE, x, y)
+        direction = get_corner(_SPRITE_SIZE, _SPRITE_SIZE, x, y)
         self.labelX.setText(str(x))
         self.labelY.setText(str(y))
-        self.labelM.setText(str(m))
-        self.animation.set_direction(m)
+        self.labelM.setText(str(direction))
+        self.animation.set_direction(direction)
+        self.mouse_pos = QMouseEvent.x(), QMouseEvent.y()
 
     def mousePressEvent(self, QMouseEvent):
+        self.update_ammo(-1)
         animation = self.animations.pop()
         label = animation.label
         label.move(0, -50)
         label.clear()
-        animation._timer.stop()
+        animation.stop()
         self.labels.append(label)
         # if algo, dícese "le achuntó al zombie"
         # self.score += 1
@@ -217,15 +239,40 @@ class MainWindow(form[0], form[1]):
         del animation._timer
         del animation
 
+    def keyPressEvent(self, QKeyEvent):
+        # mx, my = self.mouse_pos
+        x, y = self.labelPlayer.x(), self.labelPlayer.y()
+        # mrx, mry = mx - x, -(my - y)
+        # direction = get_corner(_SPRITE_SIZE, _SPRITE_SIZE, mrx, mry)
+        # self.animation.set_direction(direction)
+        dx, dy = _DIR_MOVEMENT[self.animation._direction]
+        # if QKeyEvent.key() in [QtCore.Qt.Key_W, QtCore.Qt.Key_S,
+        #                        QtCore.Qt.Key_A, QtCore.Qt.Key_D]:
+        #     self.animation.stop()
+        #     self.animation.play(interval=150, fx='walk')
+        if QKeyEvent.key() == QtCore.Qt.Key_W:
+            self.labelPlayer.move(x + dx, y + dy)
+        elif QKeyEvent.key() == QtCore.Qt.Key_S:
+            self.labelPlayer.move(x - dx, y - dy)
+        elif QKeyEvent.key() == QtCore.Qt.Key_A:
+            print(self.animation._direction, dx, dy, x, y)
+            self.labelPlayer.move(x + dy, y - dx)
+        elif QKeyEvent.key() == QtCore.Qt.Key_D:
+            self.labelPlayer.move(x - dy, y + dx)
+
     def pause(self):
         self.timer.stop()
-        self.animation._timer.stop()
+        self.animation.stop()
+        for animation in self.animations:
+            animation.stop()
         self.pushButtonPause.setText('►')
         self.pushButtonPause.clicked.connect(self.resume)
 
     def resume(self):
         self.timer.start()
         self.animation._timer.start()
+        for animation in self.animations:
+            animation._timer.start()
         self.pushButtonPause.setText('။')
         self.pushButtonPause.clicked.connect(self.pause)
 

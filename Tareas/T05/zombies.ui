@@ -136,6 +136,9 @@
        <property name="value">
         <number>100</number>
        </property>
+       <property name="format">
+        <string>%v</string>
+       </property>
       </widget>
      </item>
      <item row="0" column="0">
@@ -148,7 +151,10 @@
      <item row="1" column="1">
       <widget class="QProgressBar" name="progressBarAmmo">
        <property name="value">
-        <number>50</number>
+        <number>100</number>
+       </property>
+       <property name="format">
+        <string>%v</string>
        </property>
       </widget>
      </item>
@@ -364,6 +370,7 @@
    <zorder>line_1</zorder>
    <zorder>gridLayoutWidget_4</zorder>
    <zorder>pushButtonQuit</zorder>
+   <zorder>gridLayoutWidget</zorder>
    <zorder>gridLayoutWidget</zorder>
   </widget>
  </widget>
