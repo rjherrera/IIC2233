@@ -38,7 +38,16 @@ class Sprite:
         self.label.setPixmap(self.pixmaps[self.current_frame])
 
     def stop(self):
-        self._timer.stop()
+        if hasattr(self, '_timer'):
+            self._timer.stop()
+        if hasattr(self, 'move_timer'):
+            self.move_timer.stop()
+
+    def start(self):
+        if hasattr(self, '_timer'):
+            self._timer.start()
+        if hasattr(self, 'move_timer'):
+            self.move_timer.start()
 
 
 class CharacterSprite(Sprite):
@@ -80,7 +89,10 @@ class CharacterSprite(Sprite):
 
     def attack(self):
         self._start_frame, self._stop_frame = self.ranges['attack']
-        self.movement(True)
+        if hasattr(self, 'is_user'):
+            self.movement(True)
+        else:
+            self.movement(False)
 
     def die(self):
         self._start_frame, self._stop_frame = self.ranges['die']

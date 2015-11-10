@@ -1,5 +1,5 @@
 __all__ = ['_SPRITE_SIZE', '_MAGE', '_R', '_ZOMBIE',
-           '_DIR_MOVEMENT', 'get_corner']
+           '_DIR_MOVEMENT', 'get_corner', 'get_line', 'opuesta']
 
 
 _ZOMBIE = {'walk': (32, 89), 'attack': (96, 169), 'die': (176, 225)}
@@ -32,3 +32,50 @@ def get_corner(height, width, x, y):
             return 'B'
         else:
             return 'C'
+
+
+def opuesta(direccion):
+    number_letter = {0: 'L', 1: 'TL', 2: 'T', 3: 'TR',
+                     4: 'R', 5: 'BR', 6: 'B', 7: 'BL'}
+    dicc = {'L': 4, 'TL': 5, 'T': 6, 'TR': 7,
+            'R': 0, 'BR': 1, 'B': 2, 'BL': 3}
+    return dicc[number_letter[direccion]]
+
+
+
+# modified from
+# http://stackoverflow.com/questions/25837544/get-all-points-of-a-straight-line-in-python
+def get_line(x1, y1, x2, y2):
+    points = []
+    issteep = abs(y2-y1) > abs(x2-x1)
+    if issteep:
+        x1, y1 = y1, x1
+        x2, y2 = y2, x2
+    rev = False
+    if x1 > x2:
+        x1, x2 = x2, x1
+        y1, y2 = y2, y1
+        rev = True
+    deltax = x2 - x1
+    deltay = abs(y2-y1)
+    error = int(deltax / 2)
+    y = y1
+    ystep = None
+    if y1 < y2:
+        ystep = 1
+    else:
+        ystep = -1
+    for x in range(x1, x2 + 1):
+        if issteep:
+            points.append((y, x))
+        else:
+            points.append((x, y))
+        error -= deltay
+        if error < 0:
+            y += ystep
+            error += deltax
+    # Reverse the list if the coordinates were reversed
+    if rev:
+        points.reverse()
+    # print(points)
+    return points
