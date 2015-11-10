@@ -48,3 +48,8 @@ Se implementa un sistema en el que para dar harta libertad de escape al usuario,
 ## Orden del código
 
 Si bien el main es bastante extenso es porque la mayoría de las cosas las iba haciendo en la ventana misma, osea en la aplicación. Quizás se pudo haber modularizado más pero no se me ocurrió como realizar las tareas de pyqt en otro archivo y unirlo finalmente. De todos modos tiene hartos comentarios para que no sea tan ardua la corrección, lo siento si es muy largo el código, no fue mi intención, siempre intento ser ordenado. Las cosas que si se pudieron hacer afuera, como clases y funciones auxiliares, están presentes tanto en el archivo [utils.py](utils.py) como en [sprites.py](sprites.py), y las imagenes junto con los scores guardados en la carpeta sources [sources](sources)
+
+
+## DETALLE COMPATIBILIDAD
+
+Se agrega una foto [ex.png](sources/ex.png) para ver como se ve en ubuntu

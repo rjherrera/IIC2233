@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>601</width>
+    <height>622</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Zombies</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="pushButtonPause">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>40</y>
+      <width>31</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>။</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>130</y>
+      <width>601</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonRestart">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>40</y>
+      <width>31</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>↺</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>171</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayoutInfo">
+     <item row="1" column="1">
+      <widget class="QLabel" name="labelKilled">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Zombies Killed:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Time survived:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="labelFood">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Food Picked:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="labelTime">
+       <property name="text">
+        <string>00:00</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Ammo Picked:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="labelAmmo">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>70</y>
+      <width>161</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayoutStats">
+     <item row="0" column="1">
+      <widget class="QProgressBar" name="progressBarHealth">
+       <property name="value">
+        <number>100</number>
+       </property>
+       <property name="format">
+        <string>%v</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Health:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QProgressBar" name="progressBarAmmo">
+       <property name="value">
+        <number>100</number>
+       </property>
+       <property name="format">
+        <string>%v</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Ammo:</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>140</y>
+      <width>601</width>
+      <height>481</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>CrossCursor</cursorShape>
+    </property>
+    <widget class="QLabel" name="labelPlayer">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>210</y>
+       <width>50</width>
+       <height>50</height>
+      </rect>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>J</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <zorder>labelPlayer</zorder>
+    <zorder>gridLayoutWidget_4</zorder>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>8</y>
+      <width>601</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>RJHS | Zombies</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="Line" name="line_1">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>25</y>
+      <width>601</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_4">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>40</y>
+      <width>141</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayoutScore">
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelScore">
+       <property name="font">
+        <font>
+         <family>Fixed [Misc]</family>
+         <pointsize>15</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="font">
+        <font>
+         <family>Fixed [Misc]</family>
+         <pointsize>15</pointsize>
+         <weight>75</weight>
+         <italic>false</italic>
+         <bold>true</bold>
+         <underline>false</underline>
+         <strikeout>false</strikeout>
+         <stylestrategy>PreferDefault</stylestrategy>
+         <kerning>false</kerning>
+        </font>
+       </property>
+       <property name="text">
+        <string>SCORE</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="pushButtonQuit">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>40</y>
+      <width>31</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>✕</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="widgetStart" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>33</y>
+      <width>601</width>
+      <height>591</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>205</y>
+       <width>601</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Fixed [Misc]</family>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>WELCOME</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButtonPlay">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>340</y>
+       <width>101</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Play</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelWelcome">
+     <property name="geometry">
+      <rect>
+       <x>234</x>
+       <y>200</y>
+       <width>131</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_16">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>250</y>
+       <width>601</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Fixed [Sony]</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Enjoy RJHS | Zombies managing to survive to the undead. Kill every
+ zombie until they catch you, you will recieve help, but don't
+ count on it. Survive as long as you can!</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelDesc">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>250</y>
+       <width>581</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget_6">
+     <property name="geometry">
+      <rect>
+       <x>230</x>
+       <y>480</y>
+       <width>141</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayoutScore_3">
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelBest">
+        <property name="font">
+         <font>
+          <family>Fixed [Misc]</family>
+          <pointsize>15</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_18">
+        <property name="font">
+         <font>
+          <family>Fixed [Misc]</family>
+          <pointsize>14</pointsize>
+          <weight>75</weight>
+          <italic>false</italic>
+          <bold>true</bold>
+          <underline>false</underline>
+          <strikeout>false</strikeout>
+          <stylestrategy>PreferDefault</stylestrategy>
+          <kerning>false</kerning>
+         </font>
+        </property>
+        <property name="text">
+         <string>YOUR BEST SCORE</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QLabel" name="labelScoreBg">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>470</y>
+       <width>181</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <zorder>pushButtonPlay</zorder>
+    <zorder>labelWelcome</zorder>
+    <zorder>label_15</zorder>
+    <zorder>widget_2</zorder>
+    <zorder>widgetPause</zorder>
+    <zorder>widgetPause</zorder>
+    <zorder>widgetPause</zorder>
+    <zorder>labelDesc</zorder>
+    <zorder>label_16</zorder>
+    <zorder>gridLayoutWidget_6</zorder>
+    <zorder>labelScoreBg</zorder>
+   </widget>
+   <widget class="QWidget" name="widgetPause" native="true">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>230</y>
+      <width>391</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="labelPause">
+     <property name="geometry">
+      <rect>
+       <x>-110</x>
+       <y>30</y>
+       <width>601</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Fixed [Misc]</family>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>PAUSED</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButtonResumeBig">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>143</y>
+       <width>101</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Resume</string>
+     </property>
+    </widget>
+    <zorder>labelPause</zorder>
+    <zorder>pushButtonResumeBig</zorder>
+    <zorder>widgetEnd</zorder>
+   </widget>
+   <widget class="QWidget" name="widgetEnd" native="true">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>230</y>
+      <width>391</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <widget class="QLabel" name="labelPause_2">
+     <property name="geometry">
+      <rect>
+       <x>-110</x>
+       <y>10</y>
+       <width>601</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Fixed [Misc]</family>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>GAME OVER</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButtonQuit_2">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>143</y>
+       <width>101</width>
+       <height>27</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Quit</string>
+     </property>
+    </widget>
+    <widget class="QWidget" name="gridLayoutWidget_5">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>60</y>
+       <width>141</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayoutScore_2">
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelScoreEnd">
+        <property name="font">
+         <font>
+          <family>Fixed [Misc]</family>
+          <pointsize>15</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_17">
+        <property name="font">
+         <font>
+          <family>Fixed [Misc]</family>
+          <pointsize>14</pointsize>
+          <weight>75</weight>
+          <italic>false</italic>
+          <bold>true</bold>
+          <underline>false</underline>
+          <strikeout>false</strikeout>
+          <stylestrategy>PreferDefault</stylestrategy>
+          <kerning>false</kerning>
+         </font>
+        </property>
+        <property name="text">
+         <string>SCORE</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <zorder>line_2</zorder>
+   <zorder>pushButtonPause</zorder>
+   <zorder>label_X</zorder>
+   <zorder>pushButtonRestart</zorder>
+   <zorder>gridLayoutWidget_2</zorder>
+   <zorder>gridLayoutWidget_3</zorder>
+   <zorder>widget</zorder>
+   <zorder>label</zorder>
+   <zorder>line_1</zorder>
+   <zorder>gridLayoutWidget_4</zorder>
+   <zorder>pushButtonQuit</zorder>
+   <zorder>widgetStart</zorder>
+   <zorder>widgetPause</zorder>
+   <zorder>widgetEnd</zorder>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
