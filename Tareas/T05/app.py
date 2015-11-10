@@ -455,10 +455,10 @@ class MainWindow(form[0], form[1]):
             bullet.stop()
             return
         to_x, to_y = to_x, -to_y
-
-        # muevo la bala
+        # muevo la bala y si encuentro algo desaparezco y ataco
         bullet.label.move(to_x, to_y)
         animation = None
+        # aqui me elimino si salí de la pantalla
         if not (0 < to_x < 600 and 0 < to_y < 480):
             bullet.label.clear()
             bullet.label.move(0, -50)
@@ -466,11 +466,14 @@ class MainWindow(form[0], form[1]):
             self.bullets_labels.append(bullet.label)
             del bullet
             return
+        # aqui es donde busco si hay un zombie al q le achunte
         living_animations = [i for i in self.animations if not i.is_dead]
         for zombie in living_animations:
             ancho, largo = zombie.place
             if x in ancho and y in largo:
                 animation = zombie
+        # si habia procedo a realizar lo q corresponda
+        # es decir liminar el zombie, sumar puntaje, etc
         if animation is not None:
             self.zombies_killed += 1
             animation.is_dead = True
