@@ -392,7 +392,7 @@ class MainWindow(form[0], form[1]):
         self.animations.append(animation)
         callback = functools.partial(self.move_zombie, zombie=animation)
         animation.move_timer.timeout.connect(callback)
-        animation.move_timer.start(20)
+        animation.move_timer.start(30)
         # self.zombie_timer.stop()
 
     def clean_zombies(self):
@@ -434,7 +434,7 @@ class MainWindow(form[0], form[1]):
                 del zombie._timer
                 zombie.play(150, 'attack')
                 zombie.attacking = True
-            if zombie.accumulated_attack > 20:
+            if zombie.accumulated_attack > 25:
                 self.update_health(-20)
                 zombie.accumulated_attack = 0
             zombie.accumulated_attack += 1
