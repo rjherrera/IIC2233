@@ -24,7 +24,7 @@ $ python3 main.py --help
 
 Help menu:
 ```sh
-usage: main.py [-h] -u USER -p PASSWORD [PASSWORD ...]
+usage: main.py [-h] -u USER -p PASSWORD
 
 Votes system
 
@@ -49,7 +49,7 @@ python main.py obtener_votos --user=User --password=password
 python main.py order -u User -p Password
 ```
 
-Output:
+### Output:
 ```sh
 Los votos totales son:
  Lista_n: votos
