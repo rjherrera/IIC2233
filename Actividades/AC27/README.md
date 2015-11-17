@@ -10,6 +10,7 @@ Debe ejecutar el script de esta manera:
 
 ```sh
 python3 main.py obtener_votos -u <user> -p <password>
+```
 
 
 # EXPLICACION LARGA
