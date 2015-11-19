@@ -81,7 +81,7 @@ for i in range(len(x)):
         print('Paciente %s está enfermo' % n[i])
     else:
         print('Paciente %s está sano' % n[i])
-    plt.title('Diagnóstico según ajuste')
+    plt.title('Diagnóstico según ajuste paciente %s' % n[i])
     plt.plot(x[i], y[i], 'ko')
     # Mostramos cada grafico a la vez que se imprime el diagnóstico
     plt.show()
