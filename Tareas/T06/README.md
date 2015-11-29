@@ -2,9 +2,11 @@
 
 ## Chat
 
-Para ahorrarte el trabajo, estimado ayudante corrector jajaj, decirte que empecé el mismo día asi que mucho no hice, por no decir nada. Empecé a hacer un chat con su respectiva interfaz y que se pudiera comunicar con los otros usuarios, sin embargo no alcancé a terminarlo, lo que si funciona es el sistema de usuarios.
+Para ahorrarte el trabajo, estimado ayudante corrector jajaj, decirte que empecé el mismo día así que mucho no hice, por no decir nada, no pude empezar antes por diversos problemas y no pretendo piedad ni nada, solo aviso para ahorrarte tiempo. Empecé a hacer un chat con su respectiva interfaz y que se pudiera comunicar con los otros usuarios, sin embargo no alcancé a terminarlo, lo que si funciona es el sistema de usuarios.
 
 En general el sistema se basa en mandar instrucciones seguidas de contenido, por ejemplo: 'LOGIN|USERNAME|PASSWORD' para hacer un split después, etc.
+
+Se guardan los usuarios pickleados y se cargan igualmente.
 
 Para el cliente se necesita el archivo .ui, el cliente.py y el utils.py, para el servidor el servidor.py y el utils.py
 
