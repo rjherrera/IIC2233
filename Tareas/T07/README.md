@@ -49,6 +49,10 @@ Para mover archivos o carpetas se le pregunta al usuario la ruta de destino, sel
 
 Al ver el historial de un archivo se muestra la última edición en el servidor y en algún cliente. Además se incluye el dato del tamaño del archivo. En el caso de las carpetas, se muestra la edición más reciente de cualquier archivo adentro de la carpeta, junto con especificar cual es ese archivo causante de la última modificación, también se muestra el tamaño de la carpeta. Se decidió hacerlo de esta manera para mantener la cohesión entre historial de archivo y carpeta, de modo que se muestre más o menos la misma información en cada caso.
 
+## Dropbox API
+
+Se utiliza la API de Dropbox, por medio del SDK, considerando todos los elementos de la version 2 (api v2). Se elige ésta por ser la más actualizada, por lo mismo se usa la documentación correspondiente [Dropbox for Python Docs (SDK)](http://dropbox-sdk-python.readthedocs.org/en/master/index.html).
+
 ## Código
 
 Se entrega la interfaz general en un archivo [main.py](main.py). En otro archivo [widgets.py](widgets.py), que está explicado en ciertas zonas con comentarios y strings explicativos, se incluyen los widgets principales, el de login y el de archivos/funcionalidades en sí. De todos modos es un archivo bastante largo ya que la interfaz en sí contiene muchas funciones propias de ella y no supe como separarlo sin que perdiera sentido.
