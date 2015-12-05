@@ -68,7 +68,6 @@ En general los métodos de mover archivos, descargar, etc. siguen esta lógica: 
 create_folder(self, item)
 ```
 Se encarga de pedir el nombre de la carpeta al usuario
----
 ###### Método helper:
 ```python
 create_folder_helper(self, new_path, new_name, item)
