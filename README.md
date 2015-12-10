@@ -1,3 +1,31 @@
+IIC2233 (PUC)
+=============
+
+Información
+-----------
+
+Repositorio para el curso IIC2233 - Programación Avanzada (Pontificia Universidad Católica de Chile)
+
+Se incluyen las tareas y las actividades realizadas.
+
+[Tareas](Tareas)
+[Actividades](Actividades)
+
+
+
+Information
+-----------
+
+Repository for the course IIC2233 - Advanced Programming (Pontificia Universidad Católica de Chile)
+
+All homeworks and class assignments are included.
+
+[Homeworks](Tareas)
+[Class Assignments](Actividades)
+
+
+
+
 # Repositorio privado
 
 Este es tu repositorio que utilizarás durante todo el curso. Todos los ayudantes y profesores tienen acceso a este. Debes darle un buen uso y solo con fines académicos.
