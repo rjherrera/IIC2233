@@ -8,8 +8,11 @@ Repositorio para el curso IIC2233 - Programación Avanzada (Pontificia Universid
 
 Se incluyen las tareas y las actividades realizadas.
 
-[Tareas](Tareas)
-[Actividades](Actividades)
+
+|Material|
+|:-:|
+|[Tareas](Tareas)|
+|[Actividades](Actividades)|
 
 
 
@@ -20,8 +23,10 @@ Repository for the course IIC2233 - Advanced Programming (Pontificia Universidad
 
 All homeworks and class assignments are included.
 
-[Homeworks](Tareas)
-[Class Assignments](Actividades)
+|Material|
+|:-:|
+|[Homeworks](Tareas)|
+|[Class Assignments](Actividades)|
 
 
 
